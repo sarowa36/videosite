@@ -44,6 +44,10 @@ body {
     text-decoration: none;
     color:var(--pri-btn-color);
   }
+  button{
+    background-color: transparent;
+border-color: transparent;
+  }
   .listofpages a{
     color: var(--pri-t-color);
   }

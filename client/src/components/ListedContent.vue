@@ -2,11 +2,11 @@
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 </script>
 <template>
-    <div class="col-3 listedcontent">
+    <div class="mt-4 col-xxl-4 col-lg-6 listedcontent">
         <div class="title">
             Accelerando Datenshi Tachi...
         </div>
-        <img src="@/assets/e.webp" alt="">
+        <img src="@/assets/poster.webp" alt="">
         <div class="content_detail">
             <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam tempor accumsan metus, at viverra est tempus quis. Integer maximus dui ut velit ornare
@@ -14,7 +14,15 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
             <ul class="content_values">
                 <li>
                     <span>10k</span>
-                    <FontAwesomeIcon icon="anchor"></FontAwesomeIcon>
+                    <font-awesome-icon :icon="['far', 'bookmark']" />
+                </li>
+                <li>
+                    <span>10k</span>
+                    <font-awesome-icon :icon="['far', 'eye']" />
+                </li>
+                <li>
+                    <span>10k</span>
+                    <font-awesome-icon :icon="['far', 'thumbs-up']" />
                 </li>
             </ul>
         </div>
@@ -41,6 +49,7 @@ border-radius: 3px 3px 0 0;
     display: flex;
 flex-direction: column;
 background-color: var(--sec-cont-color);
+justify-content: space-between;
 }
 .content_detail > p{
 padding :10px;
@@ -49,9 +58,22 @@ max-height: 55%;
 overflow: hidden;
 }
 .listedcontent  img{
-    width: 40%;
-    height: 100%;
-    object-fit: cover;
-    aspect-ratio: 2/3;
+object-fit: cover;
+aspect-ratio: 2/3;
+max-width: 40%;
+height: max-content;
+}
+.content_values{
+    padding: 0 10px 10px;
+    margin: 0;
+}
+.content_values > li{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+}
+.content_values > li:nth-child(1){
+    margin-top: 7px;
 }
 </style>
