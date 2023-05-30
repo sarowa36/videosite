@@ -14,6 +14,9 @@ btn-active: button:where(:hover,:focus,:active,:target);
   --pri-btn-color:#BC6FF1;
   --pri-btn-active-color:#D0A2F0;
   --sec-btn-color:#fff;
+  --pri-label-color:#eee;
+  --pri-border-color:gray;
+  --pri-textbox-color:white;
 }
 *{
     transition: 0.3s;
@@ -47,6 +50,7 @@ body {
   button{
     background-color: transparent;
 border-color: transparent;
+color: var(--pri-t-color);
   }
   .listofpages a{
     color: var(--pri-t-color);

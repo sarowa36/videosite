@@ -17,7 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
             <span></span>
           </button>
         </div>
-        <div class="col-lg-7 d-flex align-items-center">
+        <div class="col-lg-7 align-items-center justify-content-end">
           <ul class="listofpages m-0 p-0">
             <li>
               <router-link to="/">HomePage</router-link>
@@ -114,7 +114,12 @@ export default{
   },
   methods:{
     mobileSub(){
-      $(".listofpages").animate({height:"toggle"})
+      $(".listofpages").parent().animate({height:"toggle"})
+    }
+  },
+  mounted(){
+    if(document.body.offsetWidth < 992){
+      document.querySelector(".listofpages").parentElement.setAttribute("style","display: none; transition: initial;")
     }
   }
 }
@@ -178,7 +183,7 @@ margin-bottom: 15px;
 .page_bottom_bar{
   text-align: center;
   padding: 20px 0;
-  border-top: 0.5px solid #606060;
+  border-top: 0.5px solid var(--pri-border-color);
 }
 .mobile_btn > span{
   width: 24px;
@@ -198,9 +203,8 @@ border-radius: 10%;
 @media (max-width: 992px) {
   .listofpages {
     flex-direction: column;
-height: fit-content;
 width: 100%;
-background-color: black;
+background-color: var(--pri-color);
 overflow: hidden;
   }
   .listofpages li, .listofpages li a{
