@@ -61,7 +61,6 @@ overflow: hidden;
 object-fit: cover;
 aspect-ratio: 2/3;
 max-width: 40%;
-height: max-content;
 }
 .content_values{
     padding: 0 10px 10px;
@@ -75,5 +74,16 @@ height: max-content;
 }
 .content_values > li:nth-child(1){
     margin-top: 7px;
+}
+.content_values > li svg{
+    width: 15%;
+}
+@media (max-width:576px) {
+    .listedcontent  img{
+        max-width: 50%;
+    }   
+    .listedcontent  .content_detail{
+        width: 50%;
+    }
 }
 </style>

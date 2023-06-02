@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
   <header class="_navbar">
     <div class="container">
       <div class="row justify-content-between">
-        <div class="col-3 logo">
+        <div class="col-4 logo">
           <RouterLink to="/"><img src="@/assets/logo.png" alt=""></RouterLink>
         </div>
         <div class="col-3 d-lg-none d-flex justify-content-center">
@@ -46,12 +46,12 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 </main>
   <footer>
     <div class="container">
-      <div class="row pt-4">
-        <div class="col-3 footer-logo">
+      <div class="row pt-4 align-items-center">
+        <div class="col-md-4 col-lg-3 footer-logo">
           <router-link to="/"><img src="@/assets/logo.png" alt=""></router-link>
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nibh nisi, scelerisque at lacinia id, euismod et mauris. Morbi ac vestibulum nisi. Aliquam urna risus, vestibulum et magna non, </p>
         </div>
-        <div class="col-6">
+        <div class="col-md-8 col-lg-6">
           <h4>Categories</h4>
           <ul class="list_of_tags">
             <li><a href="#"><font-awesome-icon :icon="['fas', 'tag']" />Lorem</a></li>
@@ -86,7 +86,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
             <li><a href="#"><font-awesome-icon :icon="['fas', 'tag']" />Lorem</a></li>
           </ul>
         </div>
-        <div class="col-3">
+        <div class="col-md-4 col-lg-3 quick_menu_parent">
           <h4>Quick Menu</h4>
           <ul class="quick_menu p-0">
             <li><router-link to="/">Homepage</router-link></li>
@@ -166,6 +166,7 @@ margin-bottom: 15px;
   display: flex;
   flex-wrap: wrap;
   padding: 0;
+  justify-content: center;
 }
 .list_of_tags > li{
   margin-right: 20px;
@@ -214,6 +215,11 @@ overflow: hidden;
 display: block;
 text-align: center;
 padding: 5px 0;
+  }
+}
+@media (max-width:768px) {
+  .quick_menu_parent{
+    text-align: center;
   }
 }
 </style>

@@ -6,13 +6,17 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import jQuery from 'jquery'
+import select2 from "select2/dist/js/select2.full.min.js";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./assets/main.css"
+import "select2/dist/css/select2.min.css";
+
 const app = createApp(App)
 
 window.$ = window.jQuery = jQuery;
 
+select2();
 /* region font awasome */
 library.add(fas);
 library.add(far);

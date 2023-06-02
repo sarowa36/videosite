@@ -14,6 +14,7 @@ btn-active: button:where(:hover,:focus,:active,:target);
   --pri-btn-color:#BC6FF1;
   --pri-btn-active-color:#D0A2F0;
   --sec-btn-color:#fff;
+  --sec-btn-active-color:#722DA2;
   --pri-label-color:#eee;
   --pri-border-color:gray;
   --pri-textbox-color:white;
@@ -58,3 +59,34 @@ color: var(--pri-t-color);
   :where(li.listofpages a, a):hover{
     color: var(--pri-btn-active-color)!important;
   }
+  /* Region Form*/
+  .form-row{
+    height: 70vh;
+    }
+    .form{
+        background-color: var(--pri-color);
+        border-radius: 5px;
+        padding:50px 120px;
+    }
+    
+    .submit_btn{
+        width: fit-content;
+        align-self: center;
+        background-color: var(--pri-btn-color);
+        padding: 3px 5px;
+        border: 1px solid var(--pri-border-color);
+    }
+    .submit_btn:hover {
+      background-color: var(--sec-btn-active-color);
+    }
+    @media (max-width: 1200px) {
+        .form{
+            padding: 50px;
+        }
+    }
+    @media (max-width:768px) {
+        .form{
+            padding: 50px 30px;
+        }
+    }
+    /*End Region Form*/

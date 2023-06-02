@@ -1,6 +1,7 @@
 <template>
     <div class="form_group">
-        <input :type="_type" :name="this.id" :id="this.id" class="input_text" :placeholder="placeholder" @blur="checkVal" />
+        <span v-if="!this.error.isValid"></span>
+        <input :type="_type" v-model="this.model" class="input_text" :placeholder="placeholder" @blur="checkVal" />
         <label :for="this.id" class="input_label">{{placeholder}}</label>
     </div>
 </template>
@@ -8,18 +9,22 @@
 export default {
     data(){
         return{
-        _type:"text"
+        _type:"text",
+        error:{
+            isValid:true,
+            list:[]
+        }
         };
     },
     methods:{
         checkVal(e){
            const node=e.target;
-           const hasValueAndClassExist=node.value && !node.classList.contains("with_value");
-           if(hasValueAndClassExist){
+           if(node.value && !node.classList.contains("with_value")){
             node.classList.add("with_value");
            }
-           else{
-            node.classList.remove("with_value")
+           else if(!node.value && node.classList.contains("with_value"))
+           {
+            node.classList.remove("with_value");
            }
         }
     },
@@ -28,7 +33,7 @@ export default {
             this._type=this.type
         }
     },
-    props: ["type", "placeholder", "id"]
+    props: ["compare","model","type", "placeholder"]
 }
 </script>
 <style scoped>
