@@ -10,10 +10,11 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+
     },
     {
-      path: '/Index',
+      path: '/:val',
       name: 'index',
       component: HomeView
     },

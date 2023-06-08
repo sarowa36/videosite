@@ -6,7 +6,7 @@ import Textbox from '../../components/Textbox.vue';
         <div class="row align-items-center form-row justify-content-center">
             <form v-if="!Email.WaitingVerify && !Email.Verify" @submit="sendVerifyEmail"
                 class="form col-md-9 col-lg-6 d-flex flex-column">
-                <Textbox placeholder="Email Adresiniz" id="Email" type="email" />
+                <Textbox placeholder="Email Adresiniz" id="Email" />
                 <button class="submit_btn mt-3 mb-3" type="submit">Emaili Doğrula</button>
             </form>
             <div v-if="Email.WaitingVerify" class="form col-md-9 col-lg-6 d-flex flex-column">
@@ -14,7 +14,7 @@ import Textbox from '../../components/Textbox.vue';
             </div>
             <form v-if="Email.Verify" @submit="(e) => { e.preventDefault() }"
                 class="form col-md-9 col-lg-6 d-flex flex-column">
-                <Textbox placeholder="Kullanıcı Adı" v-model="this.registerForm.email" />
+                <Textbox placeholder="Kullanıcı Adı" />
                 <Textbox placeholder="Şifrenizi Girin" id="Password" type="password" />
                 <Textbox placeholder="Şifrenizi Tekrar Girin" id="PasswordConfirm" type="password" />
                 <div class="mt-2">
@@ -48,24 +48,26 @@ export default {
         }
     },
     methods: {
-        sendVerifyEmail(e) {
+        async sendVerifyEmail(e) {
             e.preventDefault()
             this.Email.WaitingVerify = true;
-            setTimeout(() => {
+           await setTimeout( async () => {
                 this.Email.Verify = true;
                 this.Email.WaitingVerify = false;
-            }, 5000)
+            }, 1000);
+             
         }
     },
-    mounted() {
-        $(document).ready(function () {
-            $('.js-example-basic-single').select2({
+    updated(){
+       $('.js-example-basic-single').select2({
                 placeholder: "Lütfen Bir Tane Seçiniz",
+                allowClear:true,
                 theme: "classic",
                 dropdownAutoWidth: true,
                 width: "100%"
-            })
         });
-    }
+    },
+   watch:{
+   }
 }
 </script>

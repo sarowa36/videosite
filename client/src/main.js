@@ -11,18 +11,21 @@ import select2 from "select2/dist/js/select2.full.min.js";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./assets/main.css"
 import "select2/dist/css/select2.min.css";
+import "jquery-ui/dist/themes/ui-darkness/theme.css"
+import "jquery-ui/dist/themes/ui-darkness/jquery-ui.min.css"
+(async ()=>{
+    const app = createApp(App)
 
-const app = createApp(App)
+    window.$ = window.jQuery = jQuery;
+    await import("jquery-ui/dist/jquery-ui")
+    select2();
+    /* region font awasome */
+    library.add(fas);
+    library.add(far);
+    app.component('font-awesome-icon',FontAwesomeIcon);
+    /* endregion font awasome */
 
-window.$ = window.jQuery = jQuery;
-
-select2();
-/* region font awasome */
-library.add(fas);
-library.add(far);
-app.component('font-awesome-icon',FontAwesomeIcon);
-/* endregion font awasome */
-
-app.use(router);
-
-app.mount('#app')
+    app.use(router);
+    
+    app.mount('#app')
+})()

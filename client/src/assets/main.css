@@ -5,9 +5,11 @@ t: text;
 btn: button;
 btn-active: button:where(:hover,:focus,:active,:target);
 */
+/*@import url("jquery-ui/dist/themes/ui-darkness/");*/
 :root{
   --pri-color:#000;
   --sec-color:#52057B;
+  --tri-color:#a600ff;
   --pri-cont-color:#8443B1;
   --sec-cont-color:#B36CE4;
   --pri-t-color:#fff;
@@ -15,8 +17,11 @@ btn-active: button:where(:hover,:focus,:active,:target);
   --pri-btn-active-color:#D0A2F0;
   --sec-btn-color:#fff;
   --sec-btn-active-color:#722DA2;
+  --tri-btn-color:#56356C;
+  --tri-btn-active-color:#fff;
   --pri-label-color:#eee;
   --pri-border-color:gray;
+  --sec-border-color:bisque;
   --pri-textbox-color:white;
 }
 *{
@@ -53,8 +58,29 @@ body {
 border-color: transparent;
 color: var(--pri-t-color);
   }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  /* Firefox */
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+  input[type=text]{
+    outline: none;
+  }
   .listofpages a{
     color: var(--pri-t-color);
+  }
+  .btn_theme{
+    background-color: var(--tri-btn-color);
+    padding:2px 8px ;
+    border-radius:3px;
+  }
+  .btn_theme:hover{
+    background-color: var(--tri-btn-active-color);
+    color: var(--tri-btn-color);
   }
   :where(li.listofpages a, a):hover{
     color: var(--pri-btn-active-color)!important;

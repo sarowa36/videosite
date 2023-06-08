@@ -15,8 +15,10 @@
     "@fortawesome/free-regular-svg-icons": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/vue-fontawesome": "^3.0.3",
+    "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
     "jquery": "^3.7.0",
+    "jquery-ui": "^1.13.2",
     "select2": "^4.1.0-rc.0",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"

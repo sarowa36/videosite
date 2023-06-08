@@ -1,7 +1,7 @@
 <template>
     <div class="form_group">
         <span v-if="!this.error.isValid"></span>
-        <input :type="_type" v-model="this.model" class="input_text" :placeholder="placeholder" @blur="checkVal" />
+        <input :type="_type" class="input_text" :placeholder="placeholder" @blur="checkVal" />
         <label :for="this.id" class="input_label">{{placeholder}}</label>
     </div>
 </template>
