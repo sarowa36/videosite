@@ -20,7 +20,8 @@ btn-active: button:where(:hover,:focus,:active,:target);
   --tri-btn-color:#56356C;
   --tri-btn-active-color:#fff;
   --pri-label-color:#eee;
-  --pri-border-color:gray;
+  --pri-border-color:rgba(205, 194, 255, 0.4);
+  --pri-border-active-color:#5229cc;
   --sec-border-color:bisque;
   --pri-textbox-color:white;
 }
@@ -42,7 +43,7 @@ body {
       var(--_g1),var(--_g1) var(--s) var(--s) var(--sec-color);
     background-size: calc(2*var(--s)) calc(2*var(--s));
   }
-  img{
+  video,img{
     max-width: 100%;
     max-height: 100%;
   }
@@ -78,7 +79,7 @@ color: var(--pri-t-color);
     padding:2px 8px ;
     border-radius:3px;
   }
-  .btn_theme:hover{
+  .btn_theme:hover,.btn_theme.active{
     background-color: var(--tri-btn-active-color);
     color: var(--tri-btn-color);
   }

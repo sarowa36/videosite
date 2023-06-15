@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue';
 import Login from '../views/user/Login.vue';
 import ForgotPassword from "../views/user/ForgotPassword.vue";
 import Register from "../views/user/Register.vue";
+import Content from "../views/ContentView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,6 +20,11 @@ const router = createRouter({
       component: HomeView
     },
     {
+      path: '/Content/:id',
+      name: 'content',
+      component: Content
+    },
+    {
       path:'/User/Login',
       name:'login',
       component:Login
@@ -27,8 +33,7 @@ const router = createRouter({
       path:'/User/ForgotPassword',
       name:'forgotpassword',
       component:ForgotPassword
-    }
-    ,
+    },
     {
       path:'/User/Register',
       name:'register',

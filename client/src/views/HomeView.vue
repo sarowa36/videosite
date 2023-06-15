@@ -2,6 +2,8 @@
 import ListedContent from '../components/ListedContent.vue';
 import Select2 from "../components/Select2.vue";
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import axios from "axios";
+import { Content } from '../models/Content';
 </script>
 
 <template>
@@ -28,7 +30,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
         <div class="filter_row row mb-2 justify-content-end" style="display: none;">
           <div class="col-md-3">
             <label>Kategori Seçiniz</label>
-            <select2 class="category_select select2" :multiple="true" v-model="filter.category">
+            <select2 class="category_select" :searchbox="true" multiple="" v-model="filter.category">
               <option value="Horror">Horror</option>
               <option value="Comedy">Comedy</option>
             </select2>
@@ -45,7 +47,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
           </div>
           <div class="col-md-3">
             <label>Sıralama Ölçeği</label>
-            <Select2 class="order_select" :searchbox="true" v-model="filter.order">
+            <Select2 class="order_select"  v-model="filter.order">
               <option value="recommend">Önerilenler</option>
               <option value="most_view">En Çok İzlenenler</option>
               <option value="most_like">En Çok Beğenilenler</option>
@@ -54,15 +56,13 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
            
           </div>
           <div class="col-md-3 mt-2 text-end">
-            <button class="btn_theme">
+            <button class="btn_theme" @click="getData">
               <FontAwesomeIcon icon="search"></FontAwesomeIcon> Ara
             </button>
           </div>
         </div>
       </div>
-      <ListedContent></ListedContent>
-      <ListedContent></ListedContent>
-      <ListedContent></ListedContent>
+      <ListedContent v-for="content in contents" v-bind:key="content.id" :content="content"></ListedContent>
     </div>
   </div>
 </template>
@@ -108,7 +108,7 @@ export default {
         category:[],
         release:""
       },
-      contents:[{title:"Accelerando Datenshi Tachi...", description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam tempor accumsan metus, at viverra est tempus quis. Integer maximus dui ut velit ornare ",imgPath:"../assets/poster.webp",likeCount:"10k like",watchCount:"10k watch",saveCount:"10k save"}]
+      contents:[new Content()]
     }
   },
   methods: {
@@ -133,12 +133,28 @@ export default {
       else{
         this.filter[filterName]="";
       }
+    },
+    getData(){
+      axios.get("https://api.sampleapis.com/movies/horror").then((res)=>{
+        this.contents=[];
+      res.data.slice(0,12).forEach(item => {
+        this.contents.push(new Content({
+          id:item.id,
+          title:item.title,
+          description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam tempor accumsan metus, at viverra est tempus quis. Integer maximus dui ut velit ornare ",
+          imgPath:item.posterURL,
+          likeCount:"10k like",
+          watchCount:"10k watch",
+          saveCount:"10k save"
+        }))
+      });
+    })
     }
   },
   mounted() {
+    this.getData()
     const observer = new IntersectionObserver(
        ([e]) => {
-        console.log(e)
         e.target.classList.toggle("shadow", e.intersectionRatio < 1);
        },
       {

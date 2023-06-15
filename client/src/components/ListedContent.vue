@@ -1,38 +1,42 @@
-<script setup>
+<script setup >
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import {Content} from "../models/Content";
+import {RouterLink} from "vue-router"
+defineProps({
+    content:{
+        type:Content,
+    }
+})
 </script>
 <template>
     <div class="mt-4 col-xxl-4 col-lg-6 listedcontent">
-        <div class="title">
-            Accelerando Datenshi Tachi...
-        </div>
-        <img src="@/assets/poster.webp" alt="">
+        <router-link :to="'/Content/'+content.id" class="title">
+            {{content.title}}
+        </router-link>
+        <router-link class="content_image" :to="'/Content/'+content.id">
+        <img :src="content.imgPath" alt="" @error="(e)=>{e.target.src='../src/assets/poster.webp'}">
+        </router-link>
         <div class="content_detail">
             <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam tempor accumsan metus, at viverra est tempus quis. Integer maximus dui ut velit ornare
+               {{ content.description }}
             </p>
             <ul class="content_values">
                 <li>
-                    <span>10k</span>
-                    <font-awesome-icon :icon="['far', 'bookmark']" />
+                    <span>{{ content.saveCount }}</span>
+                    <font-awesome-icon :icon="['far', 'comments']" />
                 </li>
                 <li>
-                    <span>10k</span>
+                    <span>{{ content.watchCount }}</span>
                     <font-awesome-icon :icon="['far', 'eye']" />
                 </li>
                 <li>
-                    <span>10k</span>
+                    <span>{{ content.likeCount }}</span>
                     <font-awesome-icon :icon="['far', 'thumbs-up']" />
                 </li>
             </ul>
         </div>
     </div>
 </template>
-<script>
-export default {
-
-}
-</script>
 <style scoped>
 .listedcontent{
     display: flex;
@@ -43,6 +47,7 @@ width: 100%;
 background-color: var(--pri-cont-color);
 padding: 5px;
 border-radius: 3px 3px 0 0;
+color: var(--pri-t-color);
 }
 .listedcontent .content_detail{
     width: 60%;
@@ -57,10 +62,14 @@ margin: 0;
 max-height: 55%;
 overflow: hidden;
 }
-.listedcontent  img{
+.listedcontent  .content_image{
+max-width: 40%;
+}
+.listedcontent  .content_image img{
 object-fit: cover;
 aspect-ratio: 2/3;
-max-width: 40%;
+height: 100%;
+width: 100%;
 }
 .content_values{
     padding: 0 10px 10px;
@@ -79,7 +88,7 @@ max-width: 40%;
     width: 15%;
 }
 @media (max-width:576px) {
-    .listedcontent  img{
+    .listedcontent .content_image{
         max-width: 50%;
     }   
     .listedcontent  .content_detail{
