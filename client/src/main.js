@@ -15,6 +15,8 @@ import "jquery-ui/dist/themes/ui-darkness/theme.css"
 import "jquery-ui/dist/themes/ui-darkness/jquery-ui.min.css"
 (async ()=>{
     const app = createApp(App)
+    //app.config.globalProperties.API_URL="https://localhost:7292/";
+    app.config.globalProperties.API_URL="/src/jsonexamples/";
 
     window.$ = window.jQuery = jQuery;
     await import("jquery-ui/dist/jquery-ui")

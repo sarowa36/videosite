@@ -1,0 +1,19 @@
+{
+  "Version": 1,
+  "Hash": "ylfvBx7q5FJgZmZhKuRyBcdJk8gAi4eYk2qybHSzfQM=",
+  "Source": "VideoSite",
+  "BasePath": "_content/VideoSite",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "VideoSite\\wwwroot",
+      "Source": "VideoSite",
+      "ContentRoot": "C:\\Users\\musta\\OneDrive\\Masaüstü\\Yeni klasör (2)\\videosite\\VideoSite\\wwwroot\\",
+      "BasePath": "_content/VideoSite",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": []
+}

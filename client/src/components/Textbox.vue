@@ -1,15 +1,31 @@
+<script setup>
+import { computed } from 'vue';
+
+defineProps({
+    type:{
+        type:String,
+        default:"textbox"
+    },
+    placeholder:"",
+    modelValue:"",
+    accept:"",
+    height:"",
+    id:""
+})
+defineEmits(["update:modelValue"])
+</script>
 <template>
     <div class="form_group">
         <span v-if="!this.error.isValid"></span>
-        <input :type="_type" class="input_text" :placeholder="placeholder" @blur="checkVal" />
-        <label :for="this.id" class="input_label">{{placeholder}}</label>
+        <input ref="textbox" v-if="type!='textarea'" :id="id" :type="type" class="myinput" :placeholder="placeholder" @blur="checkVal" v-model="value" :accept="accept" />
+        <textarea ref="textbox" v-else class="myinput" :placeholder="placeholder" @blur="checkVal" v-model="value" :style="'height:'+height"></textarea>
+        <label :for="id" class="input_label">{{placeholder}}</label>
     </div>
 </template>
 <script>
 export default {
     data(){
         return{
-        _type:"text",
         error:{
             isValid:true,
             list:[]
@@ -18,7 +34,7 @@ export default {
     },
     methods:{
         checkVal(e){
-           const node=e.target;
+           const node=this.$refs.textbox;
            if(node.value && !node.classList.contains("with_value")){
             node.classList.add("with_value");
            }
@@ -29,11 +45,22 @@ export default {
         }
     },
     mounted() {
-        if(this.type){
-            this._type=this.type
+     const node=this.$refs.textbox;
+        if(this.modelValue){
+            node.value=this.modelValue;
+            node.classList.add("with_value")
         }
     },
-    props: ["compare","model","type", "placeholder"]
+    computed:{
+      value:{
+        get(){
+            return this.modelValue;
+        },
+        set(val){
+            this.$emit("update:modelValue", val)
+        }
+      }  
+    }
 }
 </script>
 <style scoped>
@@ -44,19 +71,20 @@ export default {
     color: var(--pri-label-color);
 }
 
-.input_text:focus, .input_text.with_value {
+.myinput:focus, .myinput.with_value {
     border-bottom-color: var(--sec-cont-color);
 }
 
-.input_text:focus+.input_label, .input_text.with_value + .input_label {
+.myinput:focus+.input_label, .myinput.with_value + .input_label {
     transform: scale(85%);
 }
 
-.input_text {
+.myinput {
     background-color: transparent;
     border: 0 var(--pri-border-color) solid;
     border-bottom: 1px solid var(--pri-border-color);
     color: var(--pri-textbox-color);
+    outline: none;
 }
 
 .form_group {
@@ -64,11 +92,24 @@ export default {
     flex-direction: column-reverse;
 }
 
-input.input_text::placeholder {
+input.myinput::placeholder, textarea.myinput::placeholder {
     color: transparent;
 }
 
-input.input_text:focus,
-input.input_text:focus-visible {
+input.myinput:focus,
+input.myinput:focus-visible {
     outline: none;
-}</style>
+}
+input.myinput[type="file"]{
+    display:none;
+}
+input.myinput[type="file"]+label{
+    transform: initial;
+    padding: 10px;
+border: 1px dashed var(--pri-border-color);
+cursor: pointer;
+}
+input.myinput[type="file"]+label:hover{
+    background-color: var(--sec-btn-active-color);
+}
+</style>

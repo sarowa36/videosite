@@ -5,7 +5,8 @@ import Textbox from '../../components/Textbox.vue';
 <template>
     <div class="container">
         <div class="row align-items-center form-row justify-content-center">
-            <form v-if="!successRefresh" @submit="()=>{ this.successRefresh =true }" class="form col-md-9 col-lg-6 d-flex flex-column">
+            <form v-if="!successRefresh" @submit="() => { this.successRefresh = true }"
+                class="form col-md-9 col-lg-6 d-flex flex-column">
                 <Textbox placeholder="Kullanıcı Adı" id="UserId" />
                 <button class="submit_btn mt-3 mb-3" type="submit">Şifreyi Yenile</button>
             </form>
@@ -14,10 +15,10 @@ import Textbox from '../../components/Textbox.vue';
     </div>
 </template>
 <script>
-export default{
-    data(){
-        return{
-            successRefresh:false
+export default {
+    data() {
+        return {
+            successRefresh: false
         }
     }
 }

@@ -1,0 +1,40 @@
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\obj\Debug\net7.0\DataAccessLayer.csproj.AssemblyReference.cache
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\obj\Debug\net7.0\DataAccessLayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\obj\Debug\net7.0\DataAccessLayer.AssemblyInfoInputs.cache
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\obj\Debug\net7.0\DataAccessLayer.AssemblyInfo.cs
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\obj\Debug\net7.0\DataAccessLayer.csproj.CoreCompileInputs.cache
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\bin\Debug\net7.0\DataAccessLayer.deps.json
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\bin\Debug\net7.0\DataAccessLayer.runtimeconfig.json
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\bin\Debug\net7.0\DataAccessLayer.dll
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\bin\Debug\net7.0\DataAccessLayer.pdb
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\bin\Debug\net7.0\EntityLayer.dll
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\bin\Debug\net7.0\ToolsLayer.dll
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\bin\Debug\net7.0\EntityLayer.pdb
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\bin\Debug\net7.0\ToolsLayer.pdb
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\obj\Debug\net7.0\DataAccessLayer.csproj.CopyComplete
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\obj\Debug\net7.0\DataAccessLayer.dll
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\obj\Debug\net7.0\refint\DataAccessLayer.dll
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\obj\Debug\net7.0\DataAccessLayer.pdb
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\obj\Debug\net7.0\DataAccessLayer.genruntimeconfig.cache
+C:\Users\musta\source\repos\AutomaticCrud\DataAccessLayer\obj\Debug\net7.0\ref\DataAccessLayer.dll
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\bin\Debug\net7.0\DataAccessLayer.deps.json
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\bin\Debug\net7.0\DataAccessLayer.runtimeconfig.json
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\bin\Debug\net7.0\DataAccessLayer.dll
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\bin\Debug\net7.0\DataAccessLayer.pdb
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\bin\Debug\net7.0\CrudProcedures.dll
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\bin\Debug\net7.0\EntityLayer.dll
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\bin\Debug\net7.0\ToolsLayer.dll
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\bin\Debug\net7.0\EntityLayer.pdb
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\bin\Debug\net7.0\ToolsLayer.pdb
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\bin\Debug\net7.0\CrudProcedures.pdb
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\obj\Debug\net7.0\DataAccessLayer.csproj.AssemblyReference.cache
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\obj\Debug\net7.0\DataAccessLayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\obj\Debug\net7.0\DataAccessLayer.AssemblyInfoInputs.cache
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\obj\Debug\net7.0\DataAccessLayer.AssemblyInfo.cs
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\obj\Debug\net7.0\DataAccessLayer.csproj.CoreCompileInputs.cache
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\obj\Debug\net7.0\DataAccessLayer.csproj.CopyComplete
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\obj\Debug\net7.0\DataAccessLayer.dll
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\obj\Debug\net7.0\refint\DataAccessLayer.dll
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\obj\Debug\net7.0\DataAccessLayer.pdb
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\obj\Debug\net7.0\DataAccessLayer.genruntimeconfig.cache
+C:\Users\musta\OneDrive\Masaüstü\Yeni klasör (2)\videosite\DataAccessLayer\obj\Debug\net7.0\ref\DataAccessLayer.dll

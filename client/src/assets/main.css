@@ -106,6 +106,10 @@ color: var(--pri-t-color);
     .submit_btn:hover {
       background-color: var(--sec-btn-active-color);
     }
+    .content {
+      background-color: var(--pri-color);
+      padding: 30px;
+  }
     @media (max-width: 1200px) {
         .form{
             padding: 50px;

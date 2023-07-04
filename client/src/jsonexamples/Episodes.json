@@ -1,0 +1,18 @@
+[
+    {
+        "id":1,
+        "name": "Bölüm 1",
+        "src":[
+            {"id":1, "episode_id":1,"name":"Youtube Bölüm 1", "iframe":"<iframe src='https://www.youtube.com/embed/L_LUpnjgPso' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>"},
+            {"id":2, "episode_id":1,"name":"Youtube 2 Bölüm 1", "iframe":"<iframe src='https://www.youtube.com/embed/1RMKR8h03iw' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>"}
+        ]
+    },
+    {
+        "id":2,
+        "name": "Bölüm 2",
+        "src":[
+            {"id":3, "episode_id":2, "name":"Youtube Bölüm 2", "iframe":"<iframe src='https://www.youtube.com/embed/L_LUpnjgPso' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>"},
+            {"id":4, "episode_id":2, "name":"Youtube 2 Bölüm 2", "iframe":"<iframe src='https://www.youtube.com/embed/1RMKR8h03iw' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>"}
+        ]
+    }
+]

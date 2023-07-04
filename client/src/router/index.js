@@ -4,6 +4,10 @@ import Login from '../views/user/Login.vue';
 import ForgotPassword from "../views/user/ForgotPassword.vue";
 import Register from "../views/user/Register.vue";
 import Content from "../views/ContentView.vue";
+import Edit from "../views/user/Edit.vue";
+import Index from "../views/admin/Index.vue";
+import ContentCU from "../views/admin/ContentCU.vue";
+import List from "../views/admin/List.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +42,26 @@ const router = createRouter({
       path:'/User/Register',
       name:'register',
       component:Register
+    },
+    {
+      path:'/User/Edit',
+      name:'edit',
+      component:Edit
+    },
+    {
+      path:'/Admin/Index',
+      name:'admin_index',
+      component:Index
+    },
+    {
+      path:'/Admin/List/:modelname',
+      name:'admin_list',
+      component:List
+    },
+    {
+      path:'/Admin/Content/:method/:id?',
+      name:'admin_contentCU',
+      component:ContentCU
     }
   ]
 })

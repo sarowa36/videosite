@@ -32,9 +32,12 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
               <router-link to="/Random">Random</router-link>
             </li>
             <li>
-              <router-link to="/User/Login">
+              <router-link to="/User/Edit">
                 <FontAwesomeIcon icon="user"></FontAwesomeIcon>
               </router-link>
+              <div class="submenu">
+                
+              </div>
             </li>
           </ul>
         </div>
@@ -42,14 +45,15 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
     </div>
   </header>
   <main>
-  <RouterView />
-</main>
+    <RouterView />
+  </main>
   <footer>
     <div class="container">
       <div class="row pt-4 align-items-center">
         <div class="col-md-4 col-lg-3 footer-logo">
           <router-link to="/"><img src="@/assets/logo.png" alt=""></router-link>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nibh nisi, scelerisque at lacinia id, euismod et mauris. Morbi ac vestibulum nisi. Aliquam urna risus, vestibulum et magna non, </p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nibh nisi, scelerisque at lacinia id, euismod
+            et mauris. Morbi ac vestibulum nisi. Aliquam urna risus, vestibulum et magna non, </p>
         </div>
         <div class="col-md-8 col-lg-6">
           <h4>Categories</h4>
@@ -109,17 +113,17 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
   </footer>
 </template>
 <script>
-export default{
-  data(){
+export default {
+  data() {
   },
-  methods:{
-    mobileSub(){
-      $(".listofpages").parent().animate({height:"toggle"})
+  methods: {
+    mobileSub() {
+      $(".listofpages").parent().animate({ height: "toggle" })
     }
   },
-  mounted(){
-    if(document.body.offsetWidth < 992){
-      document.querySelector(".listofpages").parentElement.setAttribute("style","display: none; transition: initial;")
+  mounted() {
+    if (document.body.offsetWidth < 992) {
+      document.querySelector(".listofpages").parentElement.setAttribute("style", "display: none; transition: initial;")
     }
   }
 }
@@ -129,7 +133,8 @@ export default{
 footer {
   background-color: var(--pri-color);
 }
-main{
+
+main {
   min-height: 70vh;
 }
 
@@ -151,75 +156,90 @@ main{
   justify-content: space-evenly;
   align-items: center;
 }
-.footer-logo{
+
+.footer-logo {
   display: flex;
   flex-direction: column;
   align-items: center;
   font-size: 13px;
 }
-.footer-logo img{
-width: 130px;
-object-fit: contain;
-margin-bottom: 15px;
+
+.footer-logo img {
+  width: 130px;
+  object-fit: contain;
+  margin-bottom: 15px;
 }
-.list_of_tags{
+
+.list_of_tags {
   display: flex;
   flex-wrap: wrap;
   padding: 0;
   justify-content: center;
 }
-.list_of_tags > li{
+
+.list_of_tags>li {
   margin-right: 20px;
 }
-.list_of_tags > li > a{
-  color :var(--sec-btn-color);
+
+.list_of_tags>li>a {
+  color: var(--sec-btn-color);
   font-size: 15px;
 }
-.list_of_tags > li > a > svg{
+
+.list_of_tags>li>a>svg {
   margin-right: 5px;
 }
-.quick_menu a{
+
+.quick_menu a {
   color: var(--sec-btn-color);
 }
-.page_bottom_bar{
+
+.page_bottom_bar {
   text-align: center;
   padding: 20px 0;
   border-top: 0.5px solid var(--pri-border-color);
 }
-.mobile_btn > span{
+
+.mobile_btn>span {
   width: 24px;
-display: block;
-border: 1px solid var(--pri-t-color);
-margin-bottom: 5px;
-border-radius: 10%;
+  display: block;
+  border: 1px solid var(--pri-t-color);
+  margin-bottom: 5px;
+  border-radius: 10%;
 }
-.mobile_btn > span:last-child{
+
+.mobile_btn>span:last-child {
   margin: 0;
 }
+
 @media (min-width:992px) {
-  .listofpages > li{
-  margin-right: 30px;
+  .listofpages>li {
+    margin-right: 30px;
+  }
 }
-}
+
 @media (max-width: 992px) {
   .listofpages {
     flex-direction: column;
-width: 100%;
-background-color: var(--pri-color);
-overflow: hidden;
+    width: 100%;
+    background-color: var(--pri-color);
+    overflow: hidden;
   }
-  .listofpages li, .listofpages li a{
+
+  .listofpages li,
+  .listofpages li a {
     width: 100%;
   }
-  .listofpages li a{
-display: block;
-text-align: center;
-padding: 5px 0;
+
+  .listofpages li a {
+    display: block;
+    text-align: center;
+    padding: 5px 0;
   }
 }
+
 @media (max-width:768px) {
-  .quick_menu_parent{
+  .quick_menu_parent {
     text-align: center;
   }
-}
-</style>
+}</style>
