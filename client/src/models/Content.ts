@@ -1,11 +1,13 @@
+import {Episode} from "./Episode";
 class Content {
     id: number=0
-    title: string="Accelerando Datenshi Tachi...";
+    name: string="Accelerando Datenshi Tachi...";
     description: string="Lorem ipsum ";
-    imgPath: string="../src/assets/poster.webp";
+    imageLink: string="/src/assets/poster.webp";
     likeCount: string="10k like";
     watchCount: string="10k watch";
     saveCount: string="10k save";
+    episodeList:Array<Episode>=[]
     constructor(p: object) {
         if (p) {
             Object.entries(p).forEach(item => {

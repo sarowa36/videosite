@@ -1,0 +1,29 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\musta\\OneDrive\\Masaüstü\\Yeni klasör (2)\\videosite\\VideoSite\\wwwroot\\content\\poster\\4d5a7390-6e2f-4df6-bf71-e8ee320842d8\\hellsing.jpg",
+      "PackagePath": "staticwebassets\\content\\poster\\4d5a7390-6e2f-4df6-bf71-e8ee320842d8\\hellsing.jpg"
+    },
+    {
+      "Id": "C:\\Users\\musta\\OneDrive\\Masaüstü\\Yeni klasör (2)\\videosite\\VideoSite\\wwwroot\\content\\poster\\b38a334a-e35d-49de-bb32-32877775bd6c\\Akame.jpg",
+      "PackagePath": "staticwebassets\\content\\poster\\b38a334a-e35d-49de-bb32-32877775bd6c\\Akame.jpg"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.VideoSite.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.VideoSite.props",
+      "PackagePath": "build\\VideoSite.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.VideoSite.props",
+      "PackagePath": "buildMultiTargeting\\VideoSite.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.VideoSite.props",
+      "PackagePath": "buildTransitive\\VideoSite.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ylfvBx7q5FJgZmZhKuRyBcdJk8gAi4eYk2qybHSzfQM=",
+  "Hash": "RhYxgmzlp2OE6qjEuCXUCApoQyom8I2Xx0vKfOOBYxE=",
   "Source": "VideoSite",
   "BasePath": "_content/VideoSite",
   "Mode": "Default",
@@ -15,5 +15,40 @@
       "Pattern": "**"
     }
   ],
-  "Assets": []
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\musta\\OneDrive\\Masaüstü\\Yeni klasör (2)\\videosite\\VideoSite\\wwwroot\\content\\poster\\4d5a7390-6e2f-4df6-bf71-e8ee320842d8\\hellsing.jpg",
+      "SourceId": "VideoSite",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\musta\\OneDrive\\Masaüstü\\Yeni klasör (2)\\videosite\\VideoSite\\wwwroot\\",
+      "BasePath": "_content/VideoSite",
+      "RelativePath": "content/poster/4d5a7390-6e2f-4df6-bf71-e8ee320842d8/hellsing.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\content\\poster\\4d5a7390-6e2f-4df6-bf71-e8ee320842d8\\hellsing.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\musta\\OneDrive\\Masaüstü\\Yeni klasör (2)\\videosite\\VideoSite\\wwwroot\\content\\poster\\b38a334a-e35d-49de-bb32-32877775bd6c\\Akame.jpg",
+      "SourceId": "VideoSite",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\musta\\OneDrive\\Masaüstü\\Yeni klasör (2)\\videosite\\VideoSite\\wwwroot\\",
+      "BasePath": "_content/VideoSite",
+      "RelativePath": "content/poster/b38a334a-e35d-49de-bb32-32877775bd6c/Akame.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\content\\poster\\b38a334a-e35d-49de-bb32-32877775bd6c\\Akame.jpg"
+    }
+  ]
 }

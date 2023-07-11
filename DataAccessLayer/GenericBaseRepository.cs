@@ -24,6 +24,10 @@ namespace DataAccessLayer
         {
             return db.Set<T>().Find(id);
         }
+        public virtual T Get(int id,IQueryable<T> filter)
+        {
+            return filter.FirstOrDefault(x=>x.Id==id);
+        }
         protected List<T> GetAll(IQueryable<T> list, int? index = null, int? count = null)
         {
             if (index != null)

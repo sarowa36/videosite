@@ -99,6 +99,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
             <li><router-link to="/Random">Random</router-link></li>
             <li><router-link to="/User/Login">Login</router-link></li>
             <li><router-link to="/User/Register">Register</router-link></li>
+            <li><router-link to="/Admin/Content/Create">content create</router-link></li>
           </ul>
         </div>
       </div>

@@ -1,10 +1,14 @@
 ﻿using EntityLayer.Base;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace EntityLayer.Models.Contents
@@ -18,6 +22,6 @@ namespace EntityLayer.Models.Contents
         public int EpisodeId { get; set; }
         [Required]
         [ForeignKey("EpisodeId")]
-        public Episode Episode { get; set; }
+        public Episode? Episode { get; set; }
     }
 }

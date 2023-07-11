@@ -11,7 +11,7 @@ defineProps({
             <div :class='(user_role=="admin" ? "col-2": "col-3")+" tab"'>
                 <img src="/src/assets/profile.png" alt="">
                 <ul>
-                    <li v-if="user_role == 'admin'" class="with_sub"><a href="#">
+                   <!-- <li v-if="user_role == 'admin'" class="with_sub"><a href="#">
                             <FontAwesomeIcon icon="film" />
                             İçerikler
                             <FontAwesomeIcon icon="arrow-down" />
@@ -20,12 +20,17 @@ defineProps({
                             <li><RouterLink to="/Admin/Create/Content">Create</RouterLink></li>
                             <li><RouterLink to="/Admin/List/Content">List</RouterLink></li>
                         </ul>
+                    </li>-->
+                    <li v-if="user_role == 'admin'"><RouterLink to="/Admin/Content/List">
+                            <FontAwesomeIcon icon="film" />
+                            İçerikler
+                        </RouterLink>
                     </li>
-                    <li v-if="user_role == 'admin'" class="with_sub"><a href="#">
+                    <li v-if="user_role == 'admin'" class="with_sub"><RouterLink to="/Admin/Content/List">
                             <FontAwesomeIcon icon="folder" />
                             Kategoriler
                             <FontAwesomeIcon icon="arrow-down" />
-                        </a>
+                        </RouterLink>
                         <ul>
                             <li><RouterLink to="/Admin/Create/Category">Create</RouterLink></li>
                             <li><RouterLink to="/Admin/List/Category">List</RouterLink></li>

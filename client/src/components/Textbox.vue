@@ -17,7 +17,8 @@ defineEmits(["update:modelValue"])
 <template>
     <div class="form_group">
         <span v-if="!this.error.isValid"></span>
-        <input ref="textbox" v-if="type!='textarea'" :id="id" :type="type" class="myinput" :placeholder="placeholder" @blur="checkVal" v-model="value" :accept="accept" />
+        <input ref="textbox" v-if="type!='textarea' && type!='file'" :id="id" :type="type" class="myinput" :placeholder="placeholder" @blur="checkVal" v-model="value" />
+        <input ref="textbox" v-else-if="type=='file'" :id="id" :type="type" class="myinput" :placeholder="placeholder" @change="readimg"/>
         <textarea ref="textbox" v-else class="myinput" :placeholder="placeholder" @blur="checkVal" v-model="value" :style="'height:'+height"></textarea>
         <label :for="id" class="input_label">{{placeholder}}</label>
     </div>
@@ -42,11 +43,19 @@ export default {
            {
             node.classList.remove("with_value");
            }
+        },
+        readimg(){
+            const node=this.$refs.textbox;
+            var fr=new FileReader();
+            fr.readAsDataURL(node.files[0]);
+            fr.onloadend=()=>{
+                this.value=fr.result;
+            }
         }
     },
     mounted() {
      const node=this.$refs.textbox;
-        if(this.modelValue){
+        if(this.modelValue && this.type!="file"){
             node.value=this.modelValue;
             node.classList.add("with_value")
         }

@@ -1,0 +1,20 @@
+{
+  "SerializedFilePath": "c:\\Users\\musta\\OneDrive\\Masaüstü\\Yeni klasör (2)\\videosite\\BusinessLayer\\obj\\Debug\\net7.0\\project.razor.json",
+  "FilePath": "c:\\Users\\musta\\OneDrive\\Masaüstü\\Yeni klasör (2)\\videosite\\BusinessLayer\\BusinessLayer.csproj",
+  "Configuration": {
+    "ConfigurationName": "UnsupportedRazor",
+    "LanguageVersion": "1.0",
+    "Extensions": [
+      {
+        "ExtensionName": "UnsupportedRazorExtension"
+      }
+    ]
+  },
+  "ProjectWorkspaceState": {
+    "TagHelpers": [],
+    "CSharpLanguageVersion": 1100
+  },
+  "RootNamespace": null,
+  "Documents": [],
+  "SerializationFormat": "0.3"
+}

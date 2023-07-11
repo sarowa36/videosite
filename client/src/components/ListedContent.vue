@@ -11,10 +11,10 @@ defineProps({
 <template>
     <div class="mt-4 col-xxl-4 col-lg-6 listedcontent">
         <router-link :to="'/Content/'+content.id" class="title">
-            {{content.title}}
+            {{content.name}}
         </router-link>
         <router-link class="content_image" :to="'/Content/'+content.id">
-        <img :src="content.imgPath" alt="" @error="(e)=>{e.target.src='../src/assets/poster.webp'}">
+        <img :src="content.imageLink" alt="" @error="(e)=>{e.target.src='../src/assets/poster.webp'}">
         </router-link>
         <div class="content_detail">
             <p>

@@ -6,8 +6,8 @@ import Register from "../views/user/Register.vue";
 import Content from "../views/ContentView.vue";
 import Edit from "../views/user/Edit.vue";
 import Index from "../views/admin/Index.vue";
-import ContentCU from "../views/admin/ContentCU.vue";
-import List from "../views/admin/List.vue";
+import ContentCU from "../views/admin/Content/ContentCU.vue";
+import ContentList from "../views/admin/Content/ContentList.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,9 +54,9 @@ const router = createRouter({
       component:Index
     },
     {
-      path:'/Admin/List/:modelname',
-      name:'admin_list',
-      component:List
+      path:'/Admin/Content/List',
+      name:'admin_contentlist',
+      component:ContentList
     },
     {
       path:'/Admin/Content/:method/:id?',

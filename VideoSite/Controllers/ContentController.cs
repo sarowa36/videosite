@@ -2,6 +2,10 @@
 using DataAccessLayer.Repositories;
 using EntityLayer.Models.Contents;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using ToolsLayer.FileManagement;
 
 namespace VideoSite.Controllers
 {
@@ -14,27 +18,29 @@ namespace VideoSite.Controllers
             this.db = db;
             r = new ContentRepository(this.db);
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> GetList(int? index)
         {
-            return Json(new {deneme="true"});
+            return Json(r.GetAll(index));
         }
         [HttpPost]
-        public async Task<IActionResult> Create(Content model)
+        public async Task<IActionResult> Create(Content model, IFormFile file)
         {
-            if (ModelState.IsValid)
-            {
-                r.Create(model);
-            }
+            if (file != null && file.Length > 2)
+                await model.SaveFileAsync(Path.Combine("content", "poster"), x => x.ImageLink, x => file);
+            r.Create(model);
             return Json(model);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Update(int id)
+        {
+            return Json(r.Get(id, db.Content.Include(x => x.EpisodeList).ThenInclude(x => x.SourceList)));
         }
         [HttpPost]
         public async Task<IActionResult> Update(Content model)
         {
-            if (ModelState.IsValid)
-            {
-                r.Update(model);
-            }
+            r.Update(model);
             return Json(model);
         }
     }
+
 }
