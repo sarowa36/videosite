@@ -1,12 +1,9 @@
 import {Guid} from "guid-typescript";
 class Source {
     id: string
-    title: string="Accelerando Datenshi Tachi...";
-    description: string="Lorem ipsum ";
+    name: string="Accelerando Datenshi Tachi...";
     imgPath: string="../src/assets/poster.webp";
-    likeCount: string="10k like";
-    watchCount: string="10k watch";
-    saveCount: string="10k save";
+    iframeCode:""
     episode_id:string
     constructor(p: object) {
         if (p) {
@@ -16,7 +13,7 @@ class Source {
                 }
             })
         }
-        if(!Object.keys(p).includes("id") ||p==null){
+        if(p==null || !Object.keys(p).includes("id") ){
             this.id = Guid.create().toString();
         }
     }

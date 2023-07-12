@@ -24,7 +24,7 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/Content/:id',
+      path: '/Content/:id/:episodeId?',
       name: 'content',
       component: Content
     },

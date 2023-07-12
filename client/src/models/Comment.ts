@@ -12,7 +12,6 @@ class Comment {
                 }
             })
         }
-        console.log(this.text)
         this.isOverflow=this.text.length > 350;
     }
 }

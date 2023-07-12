@@ -134,21 +134,8 @@ export default {
         this.filter[filterName]="";
       }
     },
-    getData(){
-      axios.get("https://api.sampleapis.com/movies/horror").then((res)=>{
-        this.contents=[];
-      res.data.slice(0,12).forEach(item => {
-        this.contents.push(new Content({
-          id:item.id,
-          title:item.title,
-          description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam tempor accumsan metus, at viverra est tempus quis. Integer maximus dui ut velit ornare ",
-          imgPath:item.posterURL,
-          likeCount:"10k like",
-          watchCount:"10k watch",
-          saveCount:"10k save"
-        }))
-      });
-    })
+    async getData(){
+     this.contents=(await axios.get(this.API_URL+"api/content/getlist")).data
     }
   },
   mounted() {

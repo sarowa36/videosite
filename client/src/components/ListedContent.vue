@@ -14,7 +14,7 @@ defineProps({
             {{content.name}}
         </router-link>
         <router-link class="content_image" :to="'/Content/'+content.id">
-        <img :src="content.imageLink" alt="" @error="(e)=>{e.target.src='../src/assets/poster.webp'}">
+        <img :src="this.API_URL+content.imageLink" alt="" @error="(e)=>{e.target.src='../src/assets/poster.webp'}">
         </router-link>
         <div class="content_detail">
             <p>
@@ -41,6 +41,7 @@ defineProps({
 .listedcontent{
     display: flex;
     flex-wrap: wrap;
+    height: 350px;
 }
 .listedcontent > .title{
 width: 100%;
@@ -55,6 +56,7 @@ color: var(--pri-t-color);
 flex-direction: column;
 background-color: var(--sec-cont-color);
 justify-content: space-between;
+max-height: calc(100% - 34px);
 }
 .content_detail > p{
 padding :10px;
@@ -63,7 +65,8 @@ max-height: 55%;
 overflow: hidden;
 }
 .listedcontent  .content_image{
-max-width: 40%;
+width: 40%;
+max-height: calc(100% - 34px);
 }
 .listedcontent  .content_image img{
 object-fit: cover;
@@ -89,7 +92,7 @@ width: 100%;
 }
 @media (max-width:576px) {
     .listedcontent .content_image{
-        max-width: 50%;
+        width: 50%;
     }   
     .listedcontent  .content_detail{
         width: 50%;

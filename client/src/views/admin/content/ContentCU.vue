@@ -161,7 +161,7 @@ export default {
         sendRequest() {
             var data=this.content;
             data.file=document.querySelector("#poster").files[0]
-            axios.postForm(this.API_URL+"api/content/create",data)
+            axios.postForm(this.API_URL+"api/content/"+this.$route.params.method,data)
         }
     }
 }

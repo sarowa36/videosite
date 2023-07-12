@@ -2,63 +2,34 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import Textbox from "../components/Textbox.vue"
 import { Comment } from "../models/Comment";
+import { Content } from "../models/Content";
+import axios from "axios";
+import { Episode } from "../models/Episode";
+import {RouterLink} from "vue-router";
+import { watch } from "vue";
 </script>
 <template>
     <div class="container content mt-5 mb-5">
         <div class="row">
             <div class="col-12 mb-2">
                 <div class="content_title_parent">
-                    <h3 class="m-0">Accelerando Datenshi Tachi...</h3>
+                    <h3 class="m-0">{{content.name}}</h3>
                 </div>
             </div>
             <div class="col-lg-8 tab_content">
-                <input type="radio" class="d-none tab_input" id="youtube" name="tabs" checked>
-                <div class="tab">
-                    <iframe src="https://www.youtube.com/embed/L_LUpnjgPso" title="YouTube video player" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen></iframe>
+                <div v-for="(src, i) in currentEpisode.sourceList" :id="'src'+src.id" :class="i==0 ? 'tab':'tab d-none'" >
+                    <iframe :src="src.iframeCode" title="YouTube video player" frameborder="0"></iframe>
                 </div>
-                <input type="radio" class="d-none tab_input" id="src2" name="tabs">
-                <div class="tab">
-                    <iframe src="https://www.youtube.com/embed/1RMKR8h03iw" title="YouTube video player" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen></iframe>
-                </div>
-                <div class="col-12">
+                <div class="col-12 mt-3">
                     <div class="tabs_label">
                         Kaynaklar:
-                        <label for="youtube" class="focus">youtube</label>
-                        <label for="src2">src2</label>
+                       <label v-for="(src,i) in currentEpisode.sourceList" :for="'src'+src.id" :class="i==0?'focus':''" @click="(e) =>changeLabel(e,src)">{{ src.name }}</label> 
                     </div>
                 </div>
             </div>
             <div class="col-lg-4">
                 <ul class="list_of_episode p-0" style="height: 400px;">
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
-                    <li><a href="#">Bölüm</a></li>
+                    <li v-for="ep in content.episodeList"><RouterLink :to="`/Content/${content.id}/${ep.id}`">{{ ep.name }}</RouterLink></li>
                 </ul>
             </div>
 
@@ -67,7 +38,7 @@ import { Comment } from "../models/Comment";
                     <h3 class="m-0">Açıklama</h3>
                 </div>
             </div>
-            <img src="../assets/poster.webp" class="col-lg-2 mt-2 poster" alt="">
+            <img :src="this.API_URL+content.imageLink" class="col-lg-2 mt-2 poster" alt="">
             <div class="col-lg-8 mt-2">
                 <div class="list_of_content_values mb-2">
                     <button class="btn_theme">
@@ -87,15 +58,7 @@ import { Comment } from "../models/Comment";
                     </button>
                 </div>
                 <div class="content_description">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, voluptates! Suscipit accusantium,
-                    nostrum expedita placeat, aliquam impedit officia animi possimus consequatur reiciendis maxime libero
-                    dolor nihil earum natus aspernatur et?
-                    Minima dolor ipsa non eligendi officiis corporis quam inventore, consequuntur dolorum corrupti molestiae
-                    sed veniam libero ipsam. Enim praesentium recusandae consequatur? Officiis repudiandae eaque iste quam
-                    quis dignissimos aliquam fugit?
-                    Ex praesentium nisi soluta ipsam officia labore molestiae perspiciatis, sint quod autem eum cumque a
-                    provident sit sunt consequatur cum culpa aspernatur quidem asperiores aliquid perferendis! Qui molestiae
-                    perspiciatis laborum!
+                    {{content.description}}
                 </div>
             </div>
             <div class="col-12 mt-4">
@@ -136,6 +99,8 @@ export default {
     data() {
         return {
             comments: [],
+            content:new Content(),
+            currentEpisode:new Episode({}),
             login: false
         }
     },
@@ -150,14 +115,27 @@ export default {
                 clearTimeout(doit);
                 doit = setTimeout(resizedw, 100);
             };
-        }
-    },
-    async mounted() {
-        $(".tabs_label > label").on("click", (e) => {
+        },
+        changeLabel(e,src){
             $(".tabs_label > label").removeClass("focus");
             e.target.classList.add("focus")
-        });
+            $(".tab_content > .tab").addClass("d-none")
+            $(`.tab_content > #src${src.id}.tab`).removeClass("d-none")
+        },
+        async refreshModel(){
+            this.content=(await axios.get(this.API_URL+`api/Content/Get/${this.$route.params.id}`)).data;
+        this.currentEpisode= this.$route.params.episodeId ? this.content.episodeList.filter(x=>x.id== this.$route.params.episodeId)[0] : this.content.episodeList[0];
         (await $.ajax("/src/jsonexamples/Comments.json")).forEach(i => this.comments.push(new Comment(i)));
+        console.log(1)
+        }
+    },
+    async created() {
+        this.refreshModel();
+    },
+    watch:{
+        $route(from,to){
+            this.refreshModel();
+        }
     }
 }
 </script>
@@ -255,9 +233,6 @@ export default {
     border-top: initial;
 }
 
-.tab:not(:focus) {
-    display: none;
-}
 
 .tab_input:checked+div.tab {
     display: block;

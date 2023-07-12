@@ -3,7 +3,6 @@ import {Guid} from "guid-typescript";
 class Episode {
     id: string
     name: string="Accelerando Datenshi Tachi...";
-    iframeCode:""
     sourceList:Array<Source>=[]
     constructor(p: object) {
         if (p) {
