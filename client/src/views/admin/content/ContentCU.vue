@@ -1,10 +1,12 @@
 <script setup>
 import EditLayout from '../../../components/EditLayout.vue';
 import Textbox from '../../../components/Textbox.vue';
+import Select2 from '../../../components/Select2.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { Content } from "../../../models/Content"
 import { Episode } from '../../../models/Episode';
 import { Source } from '../../../models/Source';
+import router from "../../../router/index"
 import axios from "axios";
 
 </script>
@@ -13,11 +15,17 @@ import axios from "axios";
         <div class="row justify-content-end">
             <Textbox class="col-12" placeholder="Name" v-model="content.name" />
             <Textbox class="col-12" placeholder="Açıklama" type="textarea" v-model="content.description" />
+            <div class="col-12 mt-3">
+                <label>Kategoriler</label>
+            <select2 multiple="" v-model="content.categories">
+                <option v-for="cat in allCategories" :value="cat.id">{{ cat.name }}</option>
+            </select2>
+        </div>
             <div class="mt-4 mb-2">Bölüm ve Kaynak Düzenleme</div>
             <div class="col-5">
                 <ul class="episode_and_src_list">
                     <li v-for="ep in content.episodeList" :key="ep.id">
-                        <div @click="(e) =>selectVal(e, ep , Episode.name)">{{ ep.name }}</div><a href="#" @click="openSrcMenu">
+                       <div @click="(e) =>selectVal(e, ep , Episode.name)">{{ ep.name }}</div><a href="#" @click="openSrcMenu">
                             <FontAwesomeIcon icon="arrow-down" />
                         </a>
                         <ul style="display: none;">
@@ -44,7 +52,7 @@ import axios from "axios";
             </div>
             <div class="mt-4"></div>
             <div class="col-4">
-                <img v-if="!base64img" :src="this.API_URL+content.imageLink" alt="">
+                <img v-if="!base64img" :src="API_URL+content.imageLink" alt="">
                 <img v-else :src="base64img" alt="">
             </div>
             <div class="col-8">
@@ -115,15 +123,20 @@ export default {
         return {
             content: new Content,
             selected: {},
-            base64img:""
+            base64img:"",
+            allCategories:[]
         }
     },
-    async created() {
+     async created() {
+        this.allCategories=(await axios.get("category/getlist")).data;
         if(this.$route.params.method.toLowerCase()=="update" && this.$route.params.id){
-            this.content=(await axios.get(this.API_URL+"api/content/update/"+this.$route.params.id)).data
+         this.fetchData(this.$route.params.id)
         }
     },
     methods: {
+        async fetchData(id){
+            this.content=(await axios.get("content/update/"+this.$route.params.id)).data
+        },
         selectVal(event, val,className) {
             document.querySelectorAll(".episode_and_src_list .active").forEach(element => { element.classList.remove("active") });
             event.originalTarget.classList.add("active");
@@ -158,10 +171,11 @@ export default {
             }
             $(node.nextElementSibling).animate({ height: "toggle" });
         },
-        sendRequest() {
+        async sendRequest() {
             var data=this.content;
             data.file=document.querySelector("#poster").files[0]
-            axios.postForm(this.API_URL+"api/content/"+this.$route.params.method,data)
+            await axios.postForm("content/"+this.$route.params.method,data);
+            router.go(-1)
         }
     }
 }

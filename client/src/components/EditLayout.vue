@@ -1,32 +1,23 @@
 <script setup>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import {RouterLink} from "vue-router"
+import {RouterLink} from "vue-router";
+import axios from "axios";
 defineProps({
     user_role: String
 })
 </script>
 <template>
-    <div  :class='(user_role=="admin" ? "container-fluid" :"container")+" mt-5 mb-5 content"'>
+    <div  :class='(isAdmin() ? "container-fluid" :"container")+" mt-5 mb-5 content"'>
         <div class="row">
-            <div :class='(user_role=="admin" ? "col-2": "col-3")+" tab"'>
+            <div :class='(isAdmin() ? "col-2": "col-3")+" tab"'>
                 <img src="/src/assets/profile.png" alt="">
                 <ul>
-                   <!-- <li v-if="user_role == 'admin'" class="with_sub"><a href="#">
-                            <FontAwesomeIcon icon="film" />
-                            İçerikler
-                            <FontAwesomeIcon icon="arrow-down" />
-                        </a>
-                        <ul>
-                            <li><RouterLink to="/Admin/Create/Content">Create</RouterLink></li>
-                            <li><RouterLink to="/Admin/List/Content">List</RouterLink></li>
-                        </ul>
-                    </li>-->
-                    <li v-if="user_role == 'admin'"><RouterLink to="/Admin/Content/List">
+                    <li v-if="isAdmin()"><RouterLink to="/Admin/Content/List">
                             <FontAwesomeIcon icon="film" />
                             İçerikler
                         </RouterLink>
                     </li>
-                    <li v-if="user_role == 'admin'" class="with_sub"><RouterLink to="/Admin/Content/List">
+                    <!-- <li v-if="isAdmin()" class="with_sub"><RouterLink to="/Admin/Content/List">
                             <FontAwesomeIcon icon="folder" />
                             Kategoriler
                             <FontAwesomeIcon icon="arrow-down" />
@@ -35,6 +26,16 @@ defineProps({
                             <li><RouterLink to="/Admin/Create/Category">Create</RouterLink></li>
                             <li><RouterLink to="/Admin/List/Category">List</RouterLink></li>
                         </ul>
+                    </li> -->
+                    <li v-if="isAdmin()"><RouterLink to="/Admin/Category/List">
+                            <FontAwesomeIcon icon="folder" />
+                            Kategoriler
+                        </RouterLink>
+                    </li>
+                    <li v-if="isAdmin()"><RouterLink to="/AdminMaster/User/List">
+                            <FontAwesomeIcon icon="user" />
+                            Kullanıcılar
+                        </RouterLink>
                     </li>
                     <li><a href="#">
                             <FontAwesomeIcon icon="bell" />Bildirimler
@@ -45,12 +46,12 @@ defineProps({
                     <li><a href="#">
                             <FontAwesomeIcon icon="key" />Şifre Değiştir
                         </a></li>
-                    <li><a href="#">
+                    <li><a href="#" @click="logout">
                             <FontAwesomeIcon icon="arrow-right-from-bracket" />Çıkış Yap
                         </a></li>
                 </ul>
             </div>
-            <div :class='user_role=="admin" ? "col-10" :"col-9"'>
+            <div :class='isAdmin() ? "col-10" :"col-9"'>
                 <slot></slot>
             </div>
         </div>
@@ -112,6 +113,12 @@ defineProps({
 </style>
 <script>
 export default {
+    methods:{
+        async logout(){
+            await axios.get("identity/logout")
+            location.pathname="/"
+        }
+    },
     mounted() {
         $(".with_sub > ul").css({ display: "none" })
         $(".with_sub > a").click((e) => {

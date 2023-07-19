@@ -1,9 +1,8 @@
 class Comment {
-    id: number=0
-    img:String="/src/assets/poster.webp"
     text:String
     isOverflow:boolean
-
+    imageLink:String
+    userName:String
     constructor(p: object) {
         if (p) {
             Object.entries(p).forEach(item => {
@@ -12,7 +11,13 @@ class Comment {
                 }
             })
         }
-        this.isOverflow=this.text.length > 350;
+        if(this.text==null){
+        this.isOverflow=false;    
+        }
+        else{
+            this.isOverflow=this.text.length > 350;
+        }
     }
+    
 }
 export { Comment };

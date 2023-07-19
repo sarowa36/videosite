@@ -88,7 +88,7 @@ color: var(--pri-t-color);
   }
   /* Region Form*/
   .form-row{
-    height: 70vh;
+    min-height: 70vh;
     }
     .form{
         background-color: var(--pri-color);

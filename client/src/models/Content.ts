@@ -3,11 +3,12 @@ class Content {
     id: number=0
     name: string="Accelerando Datenshi Tachi...";
     description: string="Lorem ipsum ";
-    imageLink: string="/src/assets/poster.webp";
+    imageLink: string="src/assets/poster.webp";
     likeCount: string="10k like";
     watchCount: string="10k watch";
     saveCount: string="10k save";
-    episodeList:Array<Episode>=[]
+    episodeList:Array<Episode>=[];
+    categories:[]
     constructor(p: object) {
         if (p) {
             Object.entries(p).forEach(item => {

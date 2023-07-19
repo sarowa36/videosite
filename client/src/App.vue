@@ -1,6 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import router from './router';
 </script>
 
 <template>
@@ -32,8 +33,9 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
               <router-link to="/Random">Random</router-link>
             </li>
             <li>
-              <router-link to="/User/Edit">
-                <FontAwesomeIcon icon="user"></FontAwesomeIcon>
+              <router-link to="/User/Notification" class="userbtn">
+                <img v-if="USER" :src="USER.imageLink" alt="">
+                <FontAwesomeIcon icon="user" v-else></FontAwesomeIcon>
               </router-link>
               <div class="submenu">
                 
@@ -97,8 +99,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
             <li><router-link to="/Topics">Top 50</router-link></li>
             <li><router-link to="/MostLiked">Most Liked</router-link></li>
             <li><router-link to="/Random">Random</router-link></li>
-            <li><router-link to="/User/Login">Login</router-link></li>
-            <li><router-link to="/User/Register">Register</router-link></li>
+            <li><router-link to="/Identity/Login">Login</router-link></li>
+            <li><router-link to="/Identity/Register">Register</router-link></li>
             <li><router-link to="/Admin/Content/Create">content create</router-link></li>
           </ul>
         </div>
@@ -125,6 +127,27 @@ export default {
   mounted() {
     if (document.body.offsetWidth < 992) {
       document.querySelector(".listofpages").parentElement.setAttribute("style", "display: none; transition: initial;")
+    }
+  },
+  watch:{
+    '$route'(to,from){
+      /*reqTypes:ANONYMOUS, ADMIN ,ADMINMASTER ,USER */
+      var requestType="";
+      var targetName=to.name;
+      if(targetName.includes("_")){
+        requestType=targetName.split("_")[0];
+      }
+      else{
+        requestType="ANONYMOUS";
+      }
+      var userInRole=this.checkRole(requestType);
+      var requsetIsAnonim=requestType=="ANONYMOUS";
+      if(!requsetIsAnonim && !this.USER){
+        router.push("/Identity/Login")
+      }
+      else if(!requsetIsAnonim && !userInRole){
+        router.push(from.path)
+      }
     }
   }
 }
@@ -212,7 +235,12 @@ main {
 .mobile_btn>span:last-child {
   margin: 0;
 }
-
+.userbtn > img{
+  width: 40px;
+height: 40px;
+object-fit: cover;
+border-radius: 50%;
+}
 @media (min-width:992px) {
   .listofpages>li {
     margin-right: 30px;

@@ -7,20 +7,38 @@ import { far } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import jQuery from 'jquery'
 import select2 from "select2/dist/js/select2.full.min.js";
-import { Axios} from "axios";
+import axios from "axios";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./assets/main.css"
 import "select2/dist/css/select2.min.css";
 import "jquery-ui/dist/themes/ui-darkness/theme.css"
 import "jquery-ui/dist/themes/ui-darkness/jquery-ui.min.css"
-(async ()=>{
-    const app = createApp(App)
-    app.config.globalProperties.API_URL="https://localhost:7292/";
 
+(async ()=>{
+   const app = createApp(App)
+   //app.config.globalProperties.API_URL="https://localhost:7292/";
+   //axios.defaults.baseURL="https://localhost:7292/api/";
+   app.config.globalProperties.API_URL=location.origin+"/";
+   axios.defaults.baseURL=location.origin+"/api/";
+   
+   var user=(await axios.get("identity/getuser")).data;
+   app.config.globalProperties.USER=user;
+   app.config.globalProperties.isAdmin=()=>{
+     return user && user.roles.includes("ADMIN");
+   }
+   app.config.globalProperties.isAdminMaster=()=>{
+    return user && user.roles.includes("ADMIN_MASTER");
+  }
+   app.config.globalProperties.isUser=()=>{
+    return user && user.roles.includes("USER");
+  }
+  app.config.globalProperties.checkRole=(str)=>{
+    return user.roles?.includes(str) ?? false;
+  }
     window.$ = window.jQuery = jQuery;
-    //window.axios=new Axios();
-    await import("jquery-ui/dist/jquery-ui")
+
+    import("jquery-ui/dist/jquery-ui")
     select2();
     /* region font awasome */
     library.add(fas);

@@ -16,7 +16,7 @@ defineEmits(["update:modelValue"])
 </script>
 <template>
     <div class="form_group">
-        <span v-if="!this.error.isValid"></span>
+        <span v-if="!error.isValid"></span>
         <input ref="textbox" v-if="type!='textarea' && type!='file'" :id="id" :type="type" class="myinput" :placeholder="placeholder" @blur="checkVal" v-model="value" />
         <input ref="textbox" v-else-if="type=='file'" :id="id" :type="type" class="myinput" :placeholder="placeholder" @change="readimg"/>
         <textarea ref="textbox" v-else class="myinput" :placeholder="placeholder" @blur="checkVal" v-model="value" :style="'height:'+height"></textarea>

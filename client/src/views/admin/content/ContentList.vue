@@ -28,7 +28,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
                     </td>
                 </tr> -->
                 <tr v-for="content in contentList" v-key="content.id">
-                     <td><img :src="this.API_URL+content.imageLink" alt=""></td>
+                     <td><img :src="API_URL+content.imageLink" alt=""></td>
                     <td>{{ content.name }}</td>
                     <td><RouterLink :to="'/Admin/Content/Update/'+content.id" class="btn btn-primary me-1">
                             <FontAwesomeIcon icon="pencil" />
@@ -60,8 +60,13 @@ export default {
             contentList: []
         }
     },
+    methods:{
+        async fetchData(){
+            this.contentList=await $.ajax(this.API_URL+"api/Content/Getlist");
+        }
+    },
     async mounted() {
-      this.contentList=await $.ajax(this.API_URL+"api/Content/Getlist");
+        this.fetchData();
     }
 }
 </script>

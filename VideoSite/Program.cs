@@ -1,5 +1,9 @@
 using DataAccessLayer;
+using EntityLayer.Models.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using VideoSite;
+using VideoSite.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,12 +12,25 @@ builder.Services.AddMvc().AddNewtonsoftJson(x =>
 {
     x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
-
-builder.Services.AddDbContext<ADC>(x => {
-x.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
+builder.Services.AddSignalR();
+builder.Services.AddDbContext<ADC>(x =>
+{
+    x.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
 
+
+builder.Services.AddDefaultIdentity<ApplicationUser>()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ADC>()
+    .AddErrorDescriber<CustomIdentityErrorDescriber>()
+    .AddDefaultTokenProviders();
+
 builder.Services.AddCors();
+
+builder.Services.AddSpaStaticFiles(x =>
+{
+    x.RootPath = "dist";
+});
 
 var app = builder.Build();
 
@@ -35,10 +52,20 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "api/{controller=Home}/{action=Index}/{id?}");
-
+app.UseEndpoints(endpoint =>
+{
+    endpoint.MapHub<VerifyEmailHub>("hub/verifyEmail");
+    endpoint.MapControllerRoute(name: "default", pattern: "api/{controller=Home}/{action=Index}/{id?}");
+});
+app.UseSpaStaticFiles();
+app.UseSpa(x =>
+{
+    if (app.Environment.IsDevelopment())
+    {
+        x.UseProxyToSpaDevelopmentServer("http://localhost:5173/");
+    }
+});
 app.Run();

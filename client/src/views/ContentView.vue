@@ -5,7 +5,8 @@ import { Comment } from "../models/Comment";
 import { Content } from "../models/Content";
 import axios from "axios";
 import { Episode } from "../models/Episode";
-import {RouterLink} from "vue-router";
+import { RouterLink } from "vue-router";
+import router from "../router/index";
 import { watch } from "vue";
 </script>
 <template>
@@ -13,23 +14,26 @@ import { watch } from "vue";
         <div class="row">
             <div class="col-12 mb-2">
                 <div class="content_title_parent">
-                    <h3 class="m-0">{{content.name}}</h3>
+                    <h3 class="m-0">{{ content.name }}</h3>
                 </div>
             </div>
             <div class="col-lg-8 tab_content">
-                <div v-for="(src, i) in currentEpisode.sourceList" :id="'src'+src.id" :class="i==0 ? 'tab':'tab d-none'" >
+                <div v-for="(src, i) in currentEpisode.sourceList" :id="'src' + src.id" :class="i == 0 ? 'tab' : 'tab d-none'">
                     <iframe :src="src.iframeCode" title="YouTube video player" frameborder="0"></iframe>
                 </div>
                 <div class="col-12 mt-3">
                     <div class="tabs_label">
                         Kaynaklar:
-                       <label v-for="(src,i) in currentEpisode.sourceList" :for="'src'+src.id" :class="i==0?'focus':''" @click="(e) =>changeLabel(e,src)">{{ src.name }}</label> 
+                        <label v-for="(src, i) in currentEpisode.sourceList" :for="'src' + src.id" :class="i == 0 ? 'focus' : ''"
+                            @click="(e) => changeLabel(e, src)">{{ src.name }}</label>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4">
                 <ul class="list_of_episode p-0" style="height: 400px;">
-                    <li v-for="ep in content.episodeList"><RouterLink :to="`/Content/${content.id}/${ep.id}`">{{ ep.name }}</RouterLink></li>
+                    <li v-for="ep in content.episodeList">
+                        <RouterLink :to="`/Content/${content.id}/${ep.id}`">{{ ep.name }}</RouterLink>
+                    </li>
                 </ul>
             </div>
 
@@ -38,9 +42,12 @@ import { watch } from "vue";
                     <h3 class="m-0">Açıklama</h3>
                 </div>
             </div>
-            <img :src="this.API_URL+content.imageLink" class="col-lg-2 mt-2 poster" alt="">
+            <img :src="API_URL + content.imageLink" class="col-lg-2 mt-2 poster" alt="">
             <div class="col-lg-8 mt-2">
                 <div class="list_of_content_values mb-2">
+                    <button v-if="content.categories" v-for="i in Object.keys(content.categories)" class="btn_theme">
+                        <FontAwesomeIcon icon="tag"></FontAwesomeIcon> {{content.categories[i]}}
+                    </button>
                     <button class="btn_theme">
                         <FontAwesomeIcon icon="eye" /> 300
                     </button>
@@ -50,15 +57,9 @@ import { watch } from "vue";
                     <button class="btn_theme">
                         <FontAwesomeIcon icon="thumbs-up" /> 300
                     </button>
-                    <button class="btn_theme">
-                        <FontAwesomeIcon icon="tag"></FontAwesomeIcon> Horror
-                    </button>
-                    <button class="btn_theme">
-                        <FontAwesomeIcon icon="tag"></FontAwesomeIcon> Comedy
-                    </button>
                 </div>
                 <div class="content_description">
-                    {{content.description}}
+                    {{ content.description }}
                 </div>
             </div>
             <div class="col-12 mt-4">
@@ -69,24 +70,29 @@ import { watch } from "vue";
                     <div class="create_comment"></div>
                     <div class="list_of_comment">
                         <div class="on_writing_comment">
-                            <img src="../assets/poster.webp" alt="">
-                            <Textbox class="content_text" placeholder="Yorum Giriniz" />
+                            <img :src="USER.imageLink" alt="">
+                            <Textbox class="content_text" type="textarea" placeholder="Yorum Giriniz"
+                                v-model="currentComment.text" />
                             <div class="w-100 text-end">
-                                <button class="submit_btn mt-2">Gönder</button>
+                                <button class="submit_btn mt-2" @click="sendComment">Gönder</button>
                             </div>
-                            <div v-if="!login" class="login_blur"> <button class="btn_theme" @click="login = true">Giriş
+                            <div v-if="!isUser()" class="login_blur"> <button class="btn_theme"
+                                    @click="() => { router.push('/User/Login') }">Giriş
                                     Yap</button></div>
                         </div>
                         <div v-for="i in comments">
-                            <img :src="i.img" alt="">
-                            <span v-if="!i.isOverflow" class="content_text">
-                                {{ i.text }}
-                            </span>
-                            <span v-else class="content_text">
-                                {{ i.text.slice(0, 350) }}
-                                <a href="#" @click="(e) => { e.preventDefault(); i.isOverflow = false; }"
-                                    class="readmore">Devamını Okuyun</a>
-                            </span>
+                            <img :src="i.imageLink" alt="">
+                            <div class="content_text">
+                                <div class="title">{{i.userName}}</div>
+                                <span v-if="!i.isOverflow" class="content_text">
+                                    {{ i.text }}
+                                </span>
+                                <span v-else class="">
+                                    {{ i.text.slice(0, 350) }}
+                                    <a href="#" @click="(e) => { e.preventDefault(); i.isOverflow = false; }"
+                                        class="readmore">Devamını Okuyun</a>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -99,9 +105,9 @@ export default {
     data() {
         return {
             comments: [],
-            content:new Content(),
-            currentEpisode:new Episode({}),
-            login: false
+            content: new Content(),
+            currentEpisode: new Episode({}),
+            currentComment: new Comment()
         }
     },
     methods: {
@@ -116,24 +122,36 @@ export default {
                 doit = setTimeout(resizedw, 100);
             };
         },
-        changeLabel(e,src){
+        changeLabel(e, src) {
             $(".tabs_label > label").removeClass("focus");
             e.target.classList.add("focus")
             $(".tab_content > .tab").addClass("d-none")
             $(`.tab_content > #src${src.id}.tab`).removeClass("d-none")
         },
-        async refreshModel(){
-            this.content=(await axios.get(this.API_URL+`api/Content/Get/${this.$route.params.id}`)).data;
-        this.currentEpisode= this.$route.params.episodeId ? this.content.episodeList.filter(x=>x.id== this.$route.params.episodeId)[0] : this.content.episodeList[0];
-        (await $.ajax("/src/jsonexamples/Comments.json")).forEach(i => this.comments.push(new Comment(i)));
-        console.log(1)
+        async refreshModel() {
+            this.content = (await axios.get(`Content/Get/${this.$route.params.id}`)).data;
+            this.currentEpisode = this.$route.params.episodeId ? this.content.episodeList.filter(x => x.id == this.$route.params.episodeId)[0] : this.content.episodeList[0];
+            this.comments = [];
+            (await axios.get(`Comment/getlist?episodeId=${this.currentEpisode.id}`)).data.forEach(x => {
+                this.comments.push(new Comment(x));
+            })
+            this.currentComment.episodeId = this.currentEpisode.id;
+            if (this.USER != null) {
+                this.currentComment.imageLink = this.USER.imageLink;
+            }
+        },
+        async sendComment() {
+            await axios.postForm("Comment/Create", this.currentComment);
+            this.comments.unshift(new Comment(this.currentComment));
+            this.currentComment = new Comment();
+            this.currentComment.imageLink = this.USER.imageLink;
         }
     },
-    async created() {
+    created() {
         this.refreshModel();
     },
-    watch:{
-        $route(from,to){
+    watch: {
+        $route(from, to) {
             this.refreshModel();
         }
     }
@@ -142,7 +160,6 @@ export default {
 <style scoped>
 .list_of_comment>div {
     display: flex;
-    align-items: start;
     justify-content: space-between;
     flex-wrap: wrap;
     padding: 13px 2px;
@@ -174,6 +191,10 @@ export default {
 
 .list_of_comment>div>.content_text {
     width: calc(100% - 70px);
+}
+
+.list_of_comment>div>.content_text>.title {
+    opacity: 0.6;
 }
 
 .readmore {

@@ -135,7 +135,10 @@ export default {
       }
     },
     async getData(){
-     this.contents=(await axios.get(this.API_URL+"api/content/getlist")).data
+      this.contents=[];
+     (await axios.get("content/getlist")).data.forEach(element => {
+      this.contents.push(new Content(element));
+     });
     }
   },
   mounted() {

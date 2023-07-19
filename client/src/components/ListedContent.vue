@@ -14,7 +14,7 @@ defineProps({
             {{content.name}}
         </router-link>
         <router-link class="content_image" :to="'/Content/'+content.id">
-        <img :src="this.API_URL+content.imageLink" alt="" @error="(e)=>{e.target.src='../src/assets/poster.webp'}">
+        <img :src="API_URL+content.imageLink" alt="">
         </router-link>
         <div class="content_detail">
             <p>
