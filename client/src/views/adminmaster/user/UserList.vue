@@ -20,8 +20,8 @@ import axios from 'axios';
                     <td>{{ content.userName }}</td>
                     <td>{{ content.email }}</td>
                     <td>
-                        <button :class="'me-1 btn '+ (content.lockOut ?   'btn-success':'btn-danger')" @click="toggleLock(content)">
-                            <FontAwesomeIcon :icon="content.lockOut ? 'lock-open':'lock'"></FontAwesomeIcon>
+                        <button :class="'me-1 btn '+ (!content.lockOut ?   'btn-success':'btn-danger')" @click="toggleLock(content)">
+                            <FontAwesomeIcon :icon="!content.lockOut ? 'lock-open':'lock'"></FontAwesomeIcon>
                         </button>
                         <RouterLink :to="'/AdminMaster/User/Update/'+content.id" class="btn btn-primary me-1">
                             <FontAwesomeIcon icon="pencil" />

@@ -7,13 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VideoSite", "VideoSite\Vide
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityLayer", "EntityLayer\EntityLayer.csproj", "{4032C4AF-0D34-43A4-90EC-40A6E69A5F4F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrudProcedures", "CrudProcedures\CrudProcedures.csproj", "{DE5C3317-BA0D-45A2-8779-408D41F15F10}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolsLayer", "ToolsLayer\ToolsLayer.csproj", "{91F4C349-177D-4DEA-AE26-B28B7C9449F1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{63890DE2-DD0D-4FF7-8ED9-1754DA24E019}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLayer", "BusinessLayer\BusinessLayer.csproj", "{FAD98659-9DA9-4C4C-B7DD-EBA319F4AE5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLayer", "BusinessLayer\BusinessLayer.csproj", "{FAD98659-9DA9-4C4C-B7DD-EBA319F4AE5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +27,6 @@ Global
 		{4032C4AF-0D34-43A4-90EC-40A6E69A5F4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4032C4AF-0D34-43A4-90EC-40A6E69A5F4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4032C4AF-0D34-43A4-90EC-40A6E69A5F4F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DE5C3317-BA0D-45A2-8779-408D41F15F10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DE5C3317-BA0D-45A2-8779-408D41F15F10}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DE5C3317-BA0D-45A2-8779-408D41F15F10}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DE5C3317-BA0D-45A2-8779-408D41F15F10}.Release|Any CPU.Build.0 = Release|Any CPU
 		{91F4C349-177D-4DEA-AE26-B28B7C9449F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{91F4C349-177D-4DEA-AE26-B28B7C9449F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91F4C349-177D-4DEA-AE26-B28B7C9449F1}.Release|Any CPU.ActiveCfg = Release|Any CPU

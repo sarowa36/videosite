@@ -2,5 +2,7 @@
 import EditLayout from "../../components/EditLayout.vue"
 </script>
 <template>
-<EditLayout></EditLayout>
+<EditLayout>
+    <div>akame ga killin yeni bölümü çıktı </div>
+</EditLayout>
 </template>

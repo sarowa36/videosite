@@ -33,6 +33,14 @@ namespace VideoSite.Controllers
         public async Task<IActionResult> ToggleLock(string id)
         {
             var user=await userManager.FindByIdAsync(id);
+            if (!user.LockoutEnabled)
+            {
+                user.LockoutEnd = DateTime.Now.AddYears(100);
+            }
+            else
+            {
+                user.LockoutEnd = null;
+            }
             user.LockoutEnabled=!user.LockoutEnabled;
             await userManager.UpdateAsync(user);
             return Ok();

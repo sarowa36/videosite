@@ -28,7 +28,7 @@ namespace DataAccessLayer
         {
             return filter.FirstOrDefault(x=>x.Id==id);
         }
-        public List<T> GetAll(IQueryable<T> list, int? index = null, int? count = null)
+        public virtual List<T> GetAll(IQueryable<T> list, int? index = null, int? count = null)
         {
             if (index != null)
                 list = list.Skip((int)index);

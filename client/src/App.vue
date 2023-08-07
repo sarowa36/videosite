@@ -33,13 +33,15 @@ import router from './router';
               <router-link to="/Random">Random</router-link>
             </li>
             <li>
+              <router-link to="/User/Messages" class="userbtn">
+                <FontAwesomeIcon icon="message"></FontAwesomeIcon>
+              </router-link>
+            </li>
+            <li>
               <router-link to="/User/Notification" class="userbtn">
                 <img v-if="USER" :src="USER.imageLink" alt="">
                 <FontAwesomeIcon icon="user" v-else></FontAwesomeIcon>
               </router-link>
-              <div class="submenu">
-                
-              </div>
             </li>
           </ul>
         </div>

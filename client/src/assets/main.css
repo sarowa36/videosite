@@ -78,12 +78,13 @@ color: var(--pri-t-color);
     background-color: var(--tri-btn-color);
     padding:2px 8px ;
     border-radius:3px;
+    color: var(--pri-t-color);
   }
   .btn_theme:hover,.btn_theme.active{
     background-color: var(--tri-btn-active-color);
     color: var(--tri-btn-color);
   }
-  :where(li.listofpages a, a):hover{
+  :where(li.listofpages a, a):hover, a.router-link-active{
     color: var(--pri-btn-active-color)!important;
   }
   /* Region Form*/

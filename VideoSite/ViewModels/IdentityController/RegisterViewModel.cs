@@ -15,6 +15,6 @@ namespace VideoSite.ViewModels.IdentityController
         public string Email { get; set; }
         [Required]
         public IFormFile ProfileImage { get; set; }
-        public List<int> Categories { get; set; }
+        public List<int>? Categories { get; set; }
     }
 }

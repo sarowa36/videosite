@@ -1,4 +1,5 @@
 ﻿using EntityLayer.Models.Contents;
+using System.ComponentModel.DataAnnotations;
 
 namespace VideoSite.ViewModels.ContentController
 {
@@ -19,6 +20,7 @@ namespace VideoSite.ViewModels.ContentController
         public string Name { get; set; }
         public string Description { get; set; }
         public List<int> Categories { get; set; }=new List<int>();
+        [MinLength(1)]
         public List<Episode> EpisodeList { get; set; } = new List<Episode>();
         public IFormFile? File { get; set; }
         public string? ImageLink { get; set; }

@@ -12,6 +12,10 @@ import CategoryList from "../views/admin/category/CategoryList.vue"
 import Notification from "../views/user/Notification.vue"
 import UserList from "../views/adminmaster/user/UserList.vue"
 import UserUpdate from "../views/adminmaster/user/UserUpdate.vue"
+import UserEdit from "../views/user/UserEdit.vue"
+import ChangePassword from "../views/identity/ChangePassword.vue"
+import UserInspect from "../views/user/UserInspect.vue"
+import Messages from "../views/user/Messages.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,7 +41,7 @@ const router = createRouter({
       component: Login
     },
     {
-      path: '/Identity/ForgotPassword',
+      path: '/Identity/ForgotPassword/:token?',
       name: 'forgotpassword',
       component: ForgotPassword
     },
@@ -55,6 +59,26 @@ const router = createRouter({
       path: '/User/Notification',
       name: 'USER_notification',
       component: Notification
+    },
+    {
+      path: '/User/Edit',
+      name: 'USER_edit',
+      component: UserEdit
+    }, 
+    {
+      path: '/User/ChangePassword',
+      name: 'USER_changepassword',
+      component: ChangePassword
+    },
+    {
+      path: '/User/:id?',
+      name: 'USER_userinspect',
+      component: UserInspect
+    },
+    {
+      path: '/User/Messages/:id?',
+      name: 'USER_messages',
+      component: Messages
     },
     {
       path: '/Admin/Content/List',

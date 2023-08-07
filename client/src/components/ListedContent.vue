@@ -56,7 +56,7 @@ color: var(--pri-t-color);
 flex-direction: column;
 background-color: var(--sec-cont-color);
 justify-content: space-between;
-max-height: calc(100% - 34px);
+height: calc(100% - 34px);
 }
 .content_detail > p{
 padding :10px;

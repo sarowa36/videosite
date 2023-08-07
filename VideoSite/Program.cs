@@ -1,9 +1,14 @@
 using DataAccessLayer;
+using EntityLayer.Models.Contents;
 using EntityLayer.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Serialization;
 using VideoSite;
 using VideoSite.Hubs;
+using VideoSite.Subscription;
+using VideoSite.Subscription.Base;
+using VideoSite.Subscription.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMvc().AddNewtonsoftJson(x =>
 {
     x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    x.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 });
 builder.Services.AddSignalR();
 builder.Services.AddDbContext<ADC>(x =>
@@ -31,6 +37,8 @@ builder.Services.AddSpaStaticFiles(x =>
 {
     x.RootPath = "dist";
 });
+
+builder.Services.AddSingleton<MessageDatabaseSubscription>();
 
 var app = builder.Build();
 
@@ -54,10 +62,12 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseDatabaseSubscription<MessageDatabaseSubscription>();
 
 app.UseEndpoints(endpoint =>
 {
     endpoint.MapHub<VerifyEmailHub>("hub/verifyEmail");
+    endpoint.MapHub<MessageHub>("hub/Message");
     endpoint.MapControllerRoute(name: "default", pattern: "api/{controller=Home}/{action=Index}/{id?}");
 });
 app.UseSpaStaticFiles();

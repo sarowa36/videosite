@@ -8,10 +8,13 @@ import axios from 'axios';
         <div class="row align-items-center form-row justify-content-center">
             <div class="form col-md-9 col-lg-6 d-flex flex-column">
                 <FontAwesomeIcon icon="user" class="formusericon"></FontAwesomeIcon>
-                <Textbox placeholder="Kullanıcı Adı" v-model="username" />
+                <span class="text-danger" v-for="e in errors.modelOnly">{{ e }}</span>
+                <Textbox placeholder="Kullanıcı Adı" v-model="userName" />
+                <span class="text-danger" v-for="e in errors.userName">{{ e }}</span>
                 <Textbox type="password" placeholder="Şifre" v-model="password" />
-                <RouterLink to="/User/ForgotPassword" class="forgot_password">Şifremi Unuttum</RouterLink>
-                <div class="createaccount">Hesabınız Yok Mu <RouterLink to="/User/Register">Bir Tane Oluşturun</RouterLink>
+                <span class="text-danger" v-for="e in errors.password">{{ e }}</span>
+                <RouterLink to="/Identity/ForgotPassword" class="forgot_password">Şifremi Unuttum</RouterLink>
+                <div class="createaccount">Hesabınız Yok Mu <RouterLink to="/Identity/Register">Bir Tane Oluşturun</RouterLink>
                 </div>
                 <button class="submit_btn mt-3 mb-3" type="submit" @click="sendData">Giriş Yap</button>
             </div>
@@ -38,18 +41,22 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            username: "",
-            password: ""
+            userName: "",
+            password: "",
+            errors:{}
         }
     },
     methods:{
         async sendData(){
-            var d={username:this.username, password:this.password};
+            var d={userName:this.userName, password:this.password};
             const {data} =await axios.postForm("identity/login",d,{
                 withCredentials:true
             });
             if(data.succeeded){
                 location.pathname="/";
+            }
+            else{
+                this.errors=data;
             }
         }
     }

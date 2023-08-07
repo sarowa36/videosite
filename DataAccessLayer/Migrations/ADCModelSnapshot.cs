@@ -127,6 +127,44 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("Episode");
                 });
 
+            modelBuilder.Entity("EntityLayer.Models.Contents.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FromId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ToId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromId");
+
+                    b.HasIndex("ToId");
+
+                    b.ToTable("Message", t =>
+                        {
+                            t.HasTrigger("Message");
+                        });
+                });
+
             modelBuilder.Entity("EntityLayer.Models.Contents.SourceOfIframe", b =>
                 {
                     b.Property<int>("Id")
@@ -256,6 +294,24 @@ namespace DataAccessLayer.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserM2MCategories");
+                });
+
+            modelBuilder.Entity("EntityLayer.Models.M2MRelationships.UserM2MLike", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("EpisodeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LikeDislike")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "EpisodeId");
+
+                    b.HasIndex("EpisodeId");
+
+                    b.ToTable("UserM2MLike");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -425,6 +481,25 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Content");
                 });
 
+            modelBuilder.Entity("EntityLayer.Models.Contents.Message", b =>
+                {
+                    b.HasOne("EntityLayer.Models.Identity.ApplicationUser", "From")
+                        .WithMany()
+                        .HasForeignKey("FromId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EntityLayer.Models.Identity.ApplicationUser", "To")
+                        .WithMany()
+                        .HasForeignKey("ToId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("From");
+
+                    b.Navigation("To");
+                });
+
             modelBuilder.Entity("EntityLayer.Models.Contents.SourceOfIframe", b =>
                 {
                     b.HasOne("EntityLayer.Models.Contents.Episode", "Episode")
@@ -470,6 +545,25 @@ namespace DataAccessLayer.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EntityLayer.Models.M2MRelationships.UserM2MLike", b =>
+                {
+                    b.HasOne("EntityLayer.Models.Contents.Episode", "Episode")
+                        .WithMany()
+                        .HasForeignKey("EpisodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EntityLayer.Models.Identity.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Episode");
 
                     b.Navigation("User");
                 });

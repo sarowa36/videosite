@@ -17,15 +17,16 @@ import { watch } from "vue";
                     <h3 class="m-0">{{ content.name }}</h3>
                 </div>
             </div>
-            <div class="col-lg-8 tab_content">
-                <div v-for="(src, i) in currentEpisode.sourceList" :id="'src' + src.id" :class="i == 0 ? 'tab' : 'tab d-none'">
+            <div ref="tabcontent" class="col-lg-8 tab_content">
+                <div v-for="(src, i) in currentEpisode.sourceList" :id="'src' + src.id"
+                    :class="i == 0 ? 'tab' : 'tab d-none'">
                     <iframe :src="src.iframeCode" title="YouTube video player" frameborder="0"></iframe>
                 </div>
                 <div class="col-12 mt-3">
                     <div class="tabs_label">
                         Kaynaklar:
-                        <label v-for="(src, i) in currentEpisode.sourceList" :for="'src' + src.id" :class="i == 0 ? 'focus' : ''"
-                            @click="(e) => changeLabel(e, src)">{{ src.name }}</label>
+                        <label v-for="(src, i) in currentEpisode.sourceList" :for="'src' + src.id"
+                            :class="i == 0 ? 'focus' : ''" @click="(e) => changeLabel(e, src)">{{ src.name }}</label>
                     </div>
                 </div>
             </div>
@@ -35,6 +36,15 @@ import { watch } from "vue";
                         <RouterLink :to="`/Content/${content.id}/${ep.id}`">{{ ep.name }}</RouterLink>
                     </li>
                 </ul>
+                <div class="parentof_btn_like_dislike">
+                    <button :class="likeOrDislike.currentUserVal==0 ? 'active':''" @click="(e)=>likeOrDislikeAdd(e,0)">
+                        <FontAwesomeIcon icon="thumbs-up" /> {{likeOrDislike.likeCount}}
+                    </button>
+                    <button :class="likeOrDislike.currentUserVal==1 ? 'active':''" @click="(e)=>likeOrDislikeAdd(e,1)">
+                        <FontAwesomeIcon icon="thumbs-down" /> {{ likeOrDislike.dislikeCount }}
+                    </button>
+                </div>
+
             </div>
 
             <div class="col-12 mt-4">
@@ -46,16 +56,13 @@ import { watch } from "vue";
             <div class="col-lg-8 mt-2">
                 <div class="list_of_content_values mb-2">
                     <button v-if="content.categories" v-for="i in Object.keys(content.categories)" class="btn_theme">
-                        <FontAwesomeIcon icon="tag"></FontAwesomeIcon> {{content.categories[i]}}
+                        <FontAwesomeIcon icon="tag"></FontAwesomeIcon> {{ content.categories[i] }}
                     </button>
                     <button class="btn_theme">
                         <FontAwesomeIcon icon="eye" /> 300
                     </button>
                     <button class="btn_theme">
                         <FontAwesomeIcon icon="comments" /> 300
-                    </button>
-                    <button class="btn_theme">
-                        <FontAwesomeIcon icon="thumbs-up" /> 300
                     </button>
                 </div>
                 <div class="content_description">
@@ -81,9 +88,9 @@ import { watch } from "vue";
                                     Yap</button></div>
                         </div>
                         <div v-for="i in comments">
-                            <img :src="i.imageLink" alt="">
+                           <RouterLink :to="'/user/'+i.userName"><img :src="i.imageLink" alt=""></RouterLink>
                             <div class="content_text">
-                                <div class="title">{{i.userName}}</div>
+                                <div class="title">{{ i.userName }}</div>
                                 <span v-if="!i.isOverflow" class="content_text">
                                     {{ i.text }}
                                 </span>
@@ -107,20 +114,29 @@ export default {
             comments: [],
             content: new Content(),
             currentEpisode: new Episode({}),
-            currentComment: new Comment()
+            currentComment: new Comment(),
+            likeOrDislike:{
+                currentUserVal:null,
+                dislikeCount:null,
+                likeCount:null
+            }
         }
     },
     methods: {
         resizeEpisodeNode() {
             var doit;
             var resizedw = () => {
-                document.querySelector(".list_of_episode").style.height = document.querySelector(".content iframe").offsetHeight + "px";
+                document.querySelector(".list_of_episode").style.height = (this.$refs.tabcontent.offsetWidth-24) / 1.77 + "px";
             }
             resizedw()
             window.onresize = function () {
                 clearTimeout(doit);
                 doit = setTimeout(resizedw, 100);
             };
+        },
+        async likeOrDislikeAdd(e,param){
+            this.likeOrDislike.currentUserVal=param;
+            this.likeOrDislike=(await axios.postForm("like/CUD",{episodeId:this.currentEpisode.id,likeOrDislike:param})).data
         },
         changeLabel(e, src) {
             $(".tabs_label > label").removeClass("focus");
@@ -131,6 +147,7 @@ export default {
         async refreshModel() {
             this.content = (await axios.get(`Content/Get/${this.$route.params.id}`)).data;
             this.currentEpisode = this.$route.params.episodeId ? this.content.episodeList.filter(x => x.id == this.$route.params.episodeId)[0] : this.content.episodeList[0];
+            this.likeOrDislike=(await axios.get("like/get?episodeId="+this.currentEpisode.id)).data
             this.comments = [];
             (await axios.get(`Comment/getlist?episodeId=${this.currentEpisode.id}`)).data.forEach(x => {
                 this.comments.push(new Comment(x));
@@ -150,6 +167,12 @@ export default {
     created() {
         this.refreshModel();
     },
+    mounted(){
+        this.resizeEpisodeNode();
+    },
+    unmounted(){
+        window.onresize=null;
+    },
     watch: {
         $route(from, to) {
             this.refreshModel();
@@ -158,6 +181,24 @@ export default {
 }
 </script>
 <style scoped>
+.parentof_btn_like_dislike {
+    border: 1px solid var(--pri-border-color);
+    width: max-content;
+    border-radius: 26px;
+    padding: 5px;
+    margin: auto;
+}
+
+.parentof_btn_like_dislike>button {
+    padding-inline: 8px;
+}
+.parentof_btn_like_dislike>button:where(:hover, .active){
+    color: var(--pri-btn-color);
+}
+.parentof_btn_like_dislike>button:first-child {
+    border-right: 1px solid var(--pri-border-color);
+}
+
 .list_of_comment>div {
     display: flex;
     justify-content: space-between;
@@ -181,7 +222,7 @@ export default {
     align-items: center;
 }
 
-.list_of_comment>div>img {
+.list_of_comment>div img {
     width: 50px;
     height: 50px;
     object-fit: cover;

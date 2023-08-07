@@ -14,7 +14,9 @@ import axios from "axios";
     <EditLayout user_role="admin">
         <div class="row justify-content-end">
             <Textbox class="col-12" placeholder="Name" v-model="content.name" />
+            <span class="text-danger" v-if="errors.name" v-for="err in errors.name">{{ err }}</span>
             <Textbox class="col-12" placeholder="Açıklama" type="textarea" v-model="content.description" />
+            <span class="text-danger" v-if="errors.description" v-for="err in errors.description">{{ err }}</span>
             <div class="col-12 mt-3">
                 <label>Kategoriler</label>
             <select2 multiple="" v-model="content.categories">
@@ -50,6 +52,7 @@ import axios from "axios";
                 <Textbox v-if="selected.className == Source.name" v-model="selected.iframeCode" placeholder="İframe Kodu" type="textarea"
                     height="150px" />
             </div>
+            <span class="text-danger" v-if="errors.episodeList" v-for="err in errors.episodeList">{{ err }}</span>
             <div class="mt-4"></div>
             <div class="col-4">
                 <img v-if="!base64img" :src="API_URL+content.imageLink" alt="">
@@ -58,6 +61,7 @@ import axios from "axios";
             <div class="col-8">
                 <Textbox type="file" accept="image/*" placeholder="Poster Yükleyiniz" v-model="base64img" id="poster"/>
             </div>
+            <span class="text-danger" v-if="errors.file" v-for="err in errors.file">{{ err }}</span>
             <div class="col-2">
                 <button class="btn_theme" @click="sendRequest">Kaydet</button>
             </div>  
@@ -124,7 +128,8 @@ export default {
             content: new Content,
             selected: {},
             base64img:"",
-            allCategories:[]
+            allCategories:[],
+            errors:{}
         }
     },
      async created() {
@@ -174,8 +179,13 @@ export default {
         async sendRequest() {
             var data=this.content;
             data.file=document.querySelector("#poster").files[0]
-            await axios.postForm("content/"+this.$route.params.method,data);
-            router.go(-1)
+            var result =(await axios.postForm("content/"+this.$route.params.method,data)).data;
+            if(result.succeeded){
+                router.go(-1)
+            }
+            else{
+                this.errors=result;
+            }
         }
     }
 }

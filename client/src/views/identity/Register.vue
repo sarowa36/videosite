@@ -8,19 +8,25 @@ import router from "../../router/index";
 <template>
     <div class="container">
         <div class="row align-items-center form-row justify-content-center mt-4 mb-4">
-            <form v-if="!Email.WaitingVerify && !Email.Verify" @submit="sendVerifyEmail"
+            <div v-if="position==-1" class="form col-md-9 col-lg-6 d-flex flex-column">
+                <p>Geçersiz Email Adresi</p>
+            </div> 
+            <form v-if="position==0" @submit="sendVerifyEmail"
                 class="form col-md-9 col-lg-6 d-flex flex-column">
                 <Textbox placeholder="Email Adresiniz" v-model="registerForm.email" />
                 <button class="submit_btn mt-3 mb-3" type="submit">Emaili Doğrula</button>
             </form>
-             <div v-if="Email.WaitingVerify" class="form col-md-9 col-lg-6 d-flex flex-column">
+             <div v-if="position==1" class="form col-md-9 col-lg-6 d-flex flex-column">
                 <p>Lütfen Emailinize Gelen Bağlantıya Tıklayınız</p>
             </div> 
-            <div v-if="Email.Verify" 
+            <div v-if="position==2" 
                 class="form col-md-9 col-lg-6 d-flex flex-column">
                 <Textbox placeholder="Kullanıcı Adı" v-model="registerForm.userName"  />
+                <span class="text-danger" v-for="e in errors.userName">{{ e }}</span>
                 <Textbox placeholder="Şifrenizi Girin" v-model="registerForm.password" type="password" />
+                <span class="text-danger" v-for="e in errors.password">{{ e }}</span>
                 <Textbox placeholder="Şifrenizi Tekrar Girin" v-model="registerForm.password2" type="password" />
+                <span class="text-danger" v-for="e in errors.password2">{{ e }}</span>
                 <div class="mt-2">
                     <label for="state" style="width: 100%; padding-bottom:8px ;">Lütfen Favori Kategorilerinizi
                         Seçiniz</label>
@@ -30,6 +36,7 @@ import router from "../../router/index";
                 </div>
                 <img v-if="base64img!=null" class="register_preview_profileimg mt-3" :src="base64img" alt="">
                 <Textbox type="file" accept="image/*" id="profileimg" placeholder="Profil Fotoğrafı seçiniz" class="align-items-center mt-3" v-model="base64img" />
+                <span class="text-danger" v-for="e in errors.profileImage">{{ e }}</span>
                 <button class="submit_btn mt-3 mb-3" type="submit" @click="sendRequest">Kayıt Ol</button>
             </div>
         </div>
@@ -45,17 +52,15 @@ import router from "../../router/index";
 export default {
     data() {
         return {
-            Email: {
-                Verify: false,
-                WaitingVerify: false
-            },
             registerForm: {
-                email: "ljo70881@zbock.com",
+                email: "",
                 userName:"",
                 password: "",
                 password2: "",
                 categories:[]
             },
+            errors:{},
+            position:0,
             allCategories:[],
             base64img:null,
             connectionId:null,
@@ -65,9 +70,10 @@ export default {
     methods: {
         async sendVerifyEmail(e) {
             e.preventDefault()
-            if(this.registerForm.email!="")
-            this.Email.WaitingVerify = true;
+            if(this.registerForm.email!=""){
+             this.position=1;
              this.connection.invoke("SendVerifyEmailRequest",this.registerForm.email);
+            }
         },
         async sendRequest(){
             var data=this.registerForm;
@@ -75,6 +81,9 @@ export default {
             var result=(await axios.postForm("identity/register",data)).data;
             if(result && result.succeeded){
                 location.pathname="/";
+            }
+            else{
+                this.errors=result;
             }
         }
     },
@@ -84,9 +93,13 @@ export default {
         await connection.start();
         this.connection=connection;
         this.connectionId=this.connectionId;
-        this.connection.on("EmailVerified",()=>{
-            this.Email.Verify = true;
-            this.Email.WaitingVerify = false;
+        this.connection.on("emailStatus",(val)=>{
+            if(!val){
+                this.position=-1;
+            }
+        })
+        this.connection.on("emailAccepted",()=>{
+            this.position=2;
         })
     },
    watch:{

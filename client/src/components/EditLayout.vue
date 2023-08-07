@@ -9,8 +9,8 @@ defineProps({
 <template>
     <div  :class='(isAdmin() ? "container-fluid" :"container")+" mt-5 mb-5 content"'>
         <div class="row">
-            <div :class='(isAdmin() ? "col-2": "col-3")+" tab"'>
-                <img src="/src/assets/profile.png" alt="">
+            <div :class='(isAdmin() ? "col-md-2": "col-md-3")+" tab"'>
+                <img :src="USER.imageLink" alt="">
                 <ul>
                     <li v-if="isAdmin()"><RouterLink to="/Admin/Content/List">
                             <FontAwesomeIcon icon="film" />
@@ -37,27 +37,27 @@ defineProps({
                             Kullanıcılar
                         </RouterLink>
                     </li>
-                    <li><a href="#">
+                    <li><RouterLink to="/User/Notification">
                             <FontAwesomeIcon icon="bell" />Bildirimler
-                        </a></li>
-                    <li><a href="#">
+                        </RouterLink></li>
+                    <li><RouterLink to="/User/Edit">
                             <FontAwesomeIcon icon="user" />Profilini Düzenle
-                        </a></li>
-                    <li><a href="#">
+                        </RouterLink></li>
+                    <li><RouterLink to="/User/ChangePassword">
                             <FontAwesomeIcon icon="key" />Şifre Değiştir
-                        </a></li>
+                    </RouterLink></li>
                     <li><a href="#" @click="logout">
                             <FontAwesomeIcon icon="arrow-right-from-bracket" />Çıkış Yap
                         </a></li>
                 </ul>
             </div>
-            <div :class='isAdmin() ? "col-10" :"col-9"'>
+            <div :class='"mt-3 " + (isAdmin() ? "col-md-10" :"col-md-9")'>
                 <slot></slot>
             </div>
         </div>
     </div>
 </template>
-<style>
+<style scoped>
 .tab {
     border-right: 1px dashed var(--pri-border-color);
     display: flex;
@@ -109,6 +109,11 @@ defineProps({
 .with_sub ul a {
     padding: 5px;
     padding-left: 25px;
+}
+@media (max-width:768px) {
+    .tab{
+        border-right: initial;
+    }
 }
 </style>
 <script>

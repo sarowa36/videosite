@@ -1,12 +1,12 @@
 import {Episode} from "./Episode";
 class Content {
     id: number=0
-    name: string="Accelerando Datenshi Tachi...";
-    description: string="Lorem ipsum ";
+    name: string="";
+    description: string="";
     imageLink: string="src/assets/poster.webp";
-    likeCount: string="10k like";
-    watchCount: string="10k watch";
-    saveCount: string="10k save";
+    likeCount: string="";
+    watchCount: string="";
+    saveCount: string="";
     episodeList:Array<Episode>=[];
     categories:[]
     constructor(p: object) {

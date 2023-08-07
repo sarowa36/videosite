@@ -10,16 +10,19 @@ defineProps({
     modelValue:"",
     accept:"",
     height:"",
-    id:""
+    id:"",
+    whenPressEnter:{
+        type:Function
+    }
 })
 defineEmits(["update:modelValue"])
 </script>
 <template>
     <div class="form_group">
         <span v-if="!error.isValid"></span>
-        <input ref="textbox" v-if="type!='textarea' && type!='file'" :id="id" :type="type" class="myinput" :placeholder="placeholder" @blur="checkVal" v-model="value" />
-        <input ref="textbox" v-else-if="type=='file'" :id="id" :type="type" class="myinput" :placeholder="placeholder" @change="readimg"/>
-        <textarea ref="textbox" v-else class="myinput" :placeholder="placeholder" @blur="checkVal" v-model="value" :style="'height:'+height"></textarea>
+        <input ref="textbox" v-if="type!='textarea' && type!='file'" :id="id" :type="type" class="myinput" :placeholder="placeholder" @blur="checkVal" v-model="value" @keydown="keydownEvent" />
+        <input ref="textbox" v-else-if="type=='file'" :id="id" :type="type" class="myinput" :placeholder="placeholder" @change="readimg" @keydown="keydownEvent"/>
+        <textarea ref="textbox" v-else class="myinput" :placeholder="placeholder" @blur="checkVal" v-model="value" :style="'height:'+height" @keydown="keydownEvent"></textarea>
         <label :for="id" class="input_label">{{placeholder}}</label>
     </div>
 </template>
@@ -51,6 +54,11 @@ export default {
             fr.onloadend=()=>{
                 this.value=fr.result;
             }
+        },
+        keydownEvent(e){
+            if(e.keyCode==13){
+                this.whenPressEnter()
+            }
         }
     },
     mounted() {
@@ -69,6 +77,13 @@ export default {
             this.$emit("update:modelValue", val)
         }
       }  
+    },
+    watch:{
+        value(newVal, oldVal){
+            if(!newVal){
+                this.$refs.textbox.classList.remove("with_value");
+            }
+        }
     }
 }
 </script>
