@@ -116,6 +116,7 @@ import router from './router';
       </div>
     </div>
   </footer>
+  
 </template>
 <script>
 export default {

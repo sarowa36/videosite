@@ -6,6 +6,9 @@ btn: button;
 btn-active: button:where(:hover,:focus,:active,:target);
 */
 /*@import url("jquery-ui/dist/themes/ui-darkness/");*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 :root{
   --pri-color:#000;
   --sec-color:#52057B;

@@ -24,7 +24,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
                 </RouterLink>
             </div>
             <div v-if="this.$route.params.id" class="col-8 row">
-                <div class="col-12 messaging_person">
+                <div class="col-12 messaging_person d-flex align-items-center">
                     <img :src="currentMessagingUser.imageLink" alt="">
                     <span>{{ currentMessagingUser.userName }}</span>
                 </div>
@@ -167,7 +167,6 @@ export default {
 .messaging_person {
     border-bottom: 1px solid var(--pri-border-color);
     padding-bottom: 8px;
-
 }
 
 .messaging_person>img {
@@ -209,7 +208,7 @@ export default {
 .message {
     display: flex;
     padding: 5px;
-    align-items: end;
+    align-items: flex-end;
 }
 
 .message>img {
