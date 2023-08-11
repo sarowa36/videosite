@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
+	<Content Include="dist\**\*" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>
