@@ -1,7 +1,7 @@
 
 
 # Introduction
-I started to produce this project arbitraril and currently not finish. You can [check](http://sarowa36.com.tr) live example. Based from [Turkish Movie Website](https://www.turkanime.co/). Please if you have any recommandation share with me.
+I started to produce this project arbitraril and currently not finish. You can [check (I have a problem with my host service. I will solve it as soon as possible)](http://sarowa36.com.tr) live example. Based from [Turkish Movie Website](https://www.turkanime.co/). Please if you have any recommandation share with me.
 
 # Features Im Working On
  - LazyLoad ( Message :white_check_mark:, Content :x:)
