@@ -39,7 +39,7 @@ namespace VideoSite.Controllers
                     await model.SaveFileAsync(Path.Combine("content", "poster"), x => x.ImageLink, x => model.File);
                 var content = model.AsContent();
                 model.Categories.ForEach(x => content.ContentM2MCategories.Add(new ContentM2MCategory() { CategoryId = x }));
-                //r.Create(model.AsContent());
+                r.Create(model.AsContent());
                 return Ok(new { succeeded = true });
             }
             else
@@ -83,6 +83,11 @@ namespace VideoSite.Controllers
             {
                 return Ok(ModelState.ListInvalidValueErrors());
             }
+        }
+        public async Task<IActionResult> Delete(int id)
+        {
+            r.Delete(id);
+            return Ok();
         }
     }
 

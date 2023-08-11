@@ -2,7 +2,8 @@
 import { RouterLink } from 'vue-router';
 import EditLayout from '../../../components/EditLayout.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-
+import YesOrNoDialogModal from '../../../components/YesOrNoDialogModal.vue';
+import axios from 'axios';
 </script>
 <template>
     <EditLayout user_role="admin">
@@ -15,23 +16,12 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
                 </tr>
             </thead>
             <tbody>
-                <!-- <tr>
-                    <td><img src="/src/assets/poster.webp" alt=""></td>
-                    <td>Accelerando Datenshi Tachi...</td>
-                    <td><button class="btn btn-primary me-1">
-                            <FontAwesomeIcon icon="pencil" />
-                        </button>
-                        <button class="btn btn-danger">
-                            <FontAwesomeIcon icon="trash" />
-                        </button>
-                    </td>
-                </tr> -->
                 <tr v-for="content in contentList" v-key="content.id">
                     <td>{{ content.name }}</td>
                     <td><RouterLink :to="'/Admin/Category/Update/'+content.id" class="btn btn-primary me-1">
                             <FontAwesomeIcon icon="pencil" />
                         </RouterLink>
-                        <button class="btn btn-danger">
+                        <button class="btn btn-danger" @click="openModal(content.id)">
                             <FontAwesomeIcon icon="trash" />
                         </button> 
                     </td>
@@ -39,6 +29,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
             </tbody>
         </table>
     </EditLayout>
+    <YesOrNoDialogModal v-model:is-show="isShowModal" :ok-event="okEvent" />
 </template>
 <style scoped>
 table img {
@@ -55,12 +46,26 @@ table img {
 export default {
     data() {
         return {
-            contentList: []
+            contentList: [],
+            isShowModal:false,
+            currentDeletingId:0
         }
     },
     methods:{
         async fetchData(){
-            this.contentList=await $.ajax(this.API_URL+"api/Category/Getlist");
+            this.contentList=(await axios.get("Category/Getlist")).data;
+        },
+        openModal(val){
+            this.isShowModal=true;
+            this.currentDeletingId=val;
+        },
+        async okEvent(){
+            var result=await axios.get("category/delete/"+this.currentDeletingId);
+            if(result.status==200){
+                this.contentList=this.contentList.filter(x=>x.id!=this.currentDeletingId);
+                this.isShowModal=false;
+                this.currentDeletingId=0;
+            }
         }
     },
     async mounted() {

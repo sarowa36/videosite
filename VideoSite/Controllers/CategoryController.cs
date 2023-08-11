@@ -24,5 +24,10 @@ namespace VideoSite.Controllers
             r.Create(new EntityLayer.Models.Contents.Category() { Name= CategoryName });
             return Ok();
         }
+        public async Task<IActionResult> Delete(int id)
+        {
+            r.Delete(id);
+            return Ok();
+        }
     }
 }

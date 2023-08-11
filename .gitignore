@@ -361,3 +361,4 @@ MigrationBackup/
 .vs
 client/.vscode
 VideoSite/appsettings.json
+VideoSite/dist

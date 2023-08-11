@@ -30,17 +30,14 @@ namespace VideoSite.Controllers
             this.db = db;
             this.verifyEmailHub = verifyEmailHub;
         }
+        
         /*
-        UserName= "ss36",
-        Email="ss@gmail.com",
-        PhoneNumber="905511351858",
-        password:"123Ss+"
-         */
-        public async Task<IActionResult> d()
+         For quick test 
+         public async Task<IActionResult> d()
         {
             await signmanager.SignInAsync(await userManager.FindByNameAsync("navysoldier"), true);
             return Ok();
-        }
+        }*/
         public async Task<IActionResult> GetUser()
         {
 

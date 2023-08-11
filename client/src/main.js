@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import jQuery from 'jquery'
 import select2 from "select2/dist/js/select2.full.min.js";
 import axios from "axios";
+import VueScreen from "vue-screen"
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./assets/main.css"
@@ -47,6 +48,7 @@ import "jquery-ui/dist/themes/ui-darkness/jquery-ui.min.css"
     /* endregion font awasome */
 
     app.use(router);
+    app.use(VueScreen,"bootstrap")
     
     app.mount('#app')
 })()

@@ -5,11 +5,14 @@ import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signal
 import router from '../../router';
 import { RouterLink } from 'vue-router';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import {useScreen} from "vue-screen";
+
+const screen=useScreen();
 </script>
 <template>
-    <div class="container content mt-5 mb-5">
+    <div class="container content">
         <div class="row justify-content-center">
-            <div class="friend_list col-4">
+            <div v-if="screen.width > 768 || screen.width < 768 && !this.$route.params.id" class="friend_list col-md-4">
                 <!-- <Textbox type="search" placeholder="Ara" class="mb-3" v-model="searchText"></Textbox> -->
                 <RouterLink v-for="i in userList" :to="'/user/messages/' + i.id" class="mb-3">
                     <img :src="i.imageLink" alt="">
@@ -23,8 +26,9 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
                     </div>
                 </RouterLink>
             </div>
-            <div v-if="this.$route.params.id" class="col-8 row">
+            <div v-if="this.$route.params.id" class="col-md-8 row">
                 <div class="col-12 messaging_person d-flex align-items-center">
+                    <button class="mobile_return_inbox_btn" @click="returnMessageList"><FontAwesomeIcon icon="arrow-left"></FontAwesomeIcon></button>
                     <img :src="currentMessagingUser.imageLink" alt="">
                     <span>{{ currentMessagingUser.userName }}</span>
                 </div>
@@ -41,7 +45,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
                             :icon="['far', 'paper-plane']" /></button>
                 </div>
             </div>
-            <div v-else class="col-8 d-flex justify-content-center align-items-center flex-column">
+            <div v-else-if="screen.width > 768" class="col-8 d-flex justify-content-center align-items-center flex-column">
                 <FontAwesomeIcon icon="square-envelope" style="height: 150px;" />
                 <span>Arkadaşların ile iletişime geçebilirsin</span>
             </div>
@@ -98,19 +102,22 @@ export default {
                 this.images = images;
                 this.currentMessagingUser = this.userList.find(x => x.id == currentToId);
                 this.messageList = messageList;
-                this.updateFinishEventList.push(()=>{
+                this.updateFinishEventList.push(() => {
                     this.observer.observe(this.$refs.messageList.querySelector(":nth-last-child(11)"))
                 })
-                
+
             }
         },
         async getOldMessages() {
-            var ary = await this.connection.invoke("GetOldMessages", this.messageList[this.messageList.length-1].id, this.$route.params.id)
+            var ary = await this.connection.invoke("GetOldMessages", this.messageList[this.messageList.length - 1].id, this.$route.params.id)
             this.messageList = this.messageList.concat(ary);
             if (ary.length > 0) {
                 this.updateFinishEventList.push(() => { this.observer.observe(this.$refs.messageList.querySelector(":nth-last-child(11)")) });
             }
         },
+        returnMessageList(){
+            router.push("/user/messages")
+        }
     },
     async created() {
         const connection = new HubConnectionBuilder().withUrl(this.API_URL + "hub/Message").configureLogging(LogLevel.Information).build();
@@ -122,7 +129,7 @@ export default {
             var currentToId = this.$route.params.id;
             var currentFromId = this.USER.id;
             if ((val.toId == currentToId && val.fromId == currentFromId) || (val.toId == currentFromId && val.fromId == currentToId)) {
-                this.messageList.splice(0,0,new Message(val))
+                this.messageList.splice(0, 0, new Message(val))
             }
             var userFromUserlist = this.userList.find(x => x.id == val.toId) ?? this.userList.find(x => x.id == val.fromId);
             if (userFromUserlist) {
@@ -154,12 +161,17 @@ export default {
             }, 1000);
         },
         $route(newVal, oldVal) {
+            this.scrollLastMessage()
             this.refreshModel();
         }
     }
 }
 </script>
-<style>
+<style scoped>
+.content{
+    min-height: 60vh;
+    margin-block: 5vh;
+}
 .write_message_section>div {
     width: calc(100% - 34px);
 }
@@ -245,8 +257,21 @@ export default {
 .message_list {
     height: 60vh;
     flex-direction: column-reverse;
-display: flex;
-overflow-y: scroll;
-overflow-x: hidden;
+    display: flex;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.mobile_return_inbox_btn{
+    display: none;
+}
+
+@media (max-width:768px) {
+    .mobile_return_inbox_btn{
+    display: initial;
+}
+.friend_list{
+    border: initial;
+}
 }
 </style>
