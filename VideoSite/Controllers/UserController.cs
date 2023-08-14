@@ -4,7 +4,7 @@ using EntityLayer.Models.Identity;
 using EntityLayer.Models.M2MRelationships;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using VideoSite.ViewModels.UserController;
+using EntityLayer.ViewModels.UserController;
 
 namespace VideoSite.Controllers
 {

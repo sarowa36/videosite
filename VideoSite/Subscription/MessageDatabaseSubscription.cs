@@ -9,7 +9,7 @@ using TableDependency.SqlClient;
 using TableDependency.SqlClient.Base.EventArgs;
 using VideoSite.Hubs;
 using VideoSite.Subscription.Base;
-using VideoSite.ViewModels.MessageHub;
+using EntityLayer.ViewModels.MessageHub;
 
 namespace VideoSite.Subscription
 {

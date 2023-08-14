@@ -1,6 +1,6 @@
 ﻿using EntityLayer.Models.Contents;
 
-namespace VideoSite.ViewModels.MessageHub
+namespace EntityLayer.ViewModels.MessageHub
 {
     public class MessageViewModel
     {

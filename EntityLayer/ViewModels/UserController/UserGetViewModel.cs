@@ -1,6 +1,6 @@
 ﻿using EntityLayer.Models.Identity;
 
-namespace VideoSite.ViewModels.UserController
+namespace EntityLayer.ViewModels.UserController
 {
     public class UserGetViewModel
     {

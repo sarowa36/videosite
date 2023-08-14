@@ -1,7 +1,8 @@
 ﻿using EntityLayer.Models.Contents;
 using EntityLayer.Models.Identity;
+using Microsoft.AspNetCore.Http;
 
-namespace VideoSite.ViewModels.IdentityController
+namespace EntityLayer.ViewModels.IdentityController
 {
     public class ProfileEditViewModel
     {

@@ -1,6 +1,6 @@
 ﻿using EntityLayer.Models.Identity;
 
-namespace VideoSite.ViewModels.VerifyEmailHub
+namespace EntityLayer.ViewModels.VerifyEmailHub
 {
     public class UserTokenViewModel
     {

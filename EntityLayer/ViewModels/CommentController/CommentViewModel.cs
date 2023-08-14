@@ -1,4 +1,4 @@
-﻿namespace VideoSite.ViewModels.CommentController
+﻿namespace EntityLayer.ViewModels.CommentController
 {
     public class CommentViewModel
     {

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ToolsLayer.FileManagement;
 using ToolsLayer.List;
-using VideoSite.ViewModels.IdentityController;
+using EntityLayer.ViewModels.IdentityController;
 using EntityLayer.Models.M2MRelationships;
 using VideoSite.Helpers;
 using VideoSite.Hubs;

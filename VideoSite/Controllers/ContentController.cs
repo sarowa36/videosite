@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using ToolsLayer.FileManagement;
-using VideoSite.ViewModels.ContentController;
+using EntityLayer.ViewModels.ContentController;
 using EntityLayer.Models.M2MRelationships;
 using ToolsLayer.List;
 using VideoSite.Helpers;
+using BusinessLayer.Validators.ViewModels.ContentController;
 
 namespace VideoSite.Controllers
 {
@@ -33,6 +34,8 @@ namespace VideoSite.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ContentViewModel model)
         {
+            var v = new ContentViewModelValidator();
+            v.Validate(model);
             if (ModelState.IsValid)
             {
                 if (model.File != null && model.File.Length > 2)

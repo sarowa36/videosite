@@ -1,4 +1,4 @@
-﻿namespace VideoSite.ViewModels.IdentityController
+﻿namespace EntityLayer.ViewModels.IdentityController
 {
     public class RefreshPasswordModel
     {

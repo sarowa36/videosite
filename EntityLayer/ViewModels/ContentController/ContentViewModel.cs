@@ -1,7 +1,8 @@
 ﻿using EntityLayer.Models.Contents;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
-namespace VideoSite.ViewModels.ContentController
+namespace EntityLayer.ViewModels.ContentController
 {
     public class ContentViewModel
     {

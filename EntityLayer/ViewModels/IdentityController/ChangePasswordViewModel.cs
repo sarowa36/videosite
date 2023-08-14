@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace VideoSite.ViewModels.IdentityController
+namespace EntityLayer.ViewModels.IdentityController
 {
     public class ChangePasswordViewModel
     {

@@ -1,4 +1,4 @@
-﻿using VideoSite.ViewModels.VerifyEmailHub;
+﻿using EntityLayer.ViewModels.VerifyEmailHub;
 
 namespace VideoSite.InMemoryData
 {

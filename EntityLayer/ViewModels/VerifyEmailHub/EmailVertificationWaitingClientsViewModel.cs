@@ -1,4 +1,4 @@
-﻿namespace VideoSite.ViewModels.VerifyEmailHub
+﻿namespace EntityLayer.ViewModels.VerifyEmailHub
 {
     public class EmailVertificationWaitingClientsViewModel
     {

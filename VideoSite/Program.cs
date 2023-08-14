@@ -1,6 +1,7 @@
 using DataAccessLayer;
 using EntityLayer.Models.Contents;
 using EntityLayer.Models.Identity;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
@@ -13,7 +14,7 @@ using VideoSite.Subscription.Middleware;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddMvc().AddNewtonsoftJson(x =>
+builder.Services.AddMvc().AddFluentValidation(x=>x.RegisterValidatorsFromAssemblyContaining<BusinessLayer.AssemblyMarkUp>()).AddNewtonsoftJson(x =>
 {
     x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
     x.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();

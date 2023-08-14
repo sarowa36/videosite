@@ -10,7 +10,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using ToolsLayer.String;
+using ToolsLayer.Validation;
 using VideoSite.Helpers;
 using VideoSite.InMemoryData;
 
@@ -33,7 +33,7 @@ namespace VideoSite.Hubs
             else
             {
                 var httpcontext = Context.GetHttpContext();
-                var val = new ViewModels.VerifyEmailHub.EmailVertificationWaitingClientsViewModel() { ClientId = Context.ConnectionId, Email = email };
+                var val = new EntityLayer.ViewModels.VerifyEmailHub.EmailVertificationWaitingClientsViewModel() { ClientId = Context.ConnectionId, Email = email };
                 EmailVertificationWaitingClientsSource.EmailVertificationWaitingClientsViewModel.Add(val);
                 SendEmail.Send($"<a href='{httpcontext.Request.Scheme + "://" + httpcontext.Request.Host + "/identity/verifyEmail/" + Uri.EscapeDataString(val.Guid)}'>Emailinizi Onaylayın</a>",email,httpcontext);
                 await Clients.Caller.SendAsync("emailStatus", true);
@@ -50,7 +50,7 @@ namespace VideoSite.Hubs
             {
                 var httpcontext = Context.GetHttpContext();
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                UserTokenSource.UserTokenViewModels.Add(new ViewModels.VerifyEmailHub.UserTokenViewModel() { ClientId = Context.ConnectionId, Token = token, User = user });
+                UserTokenSource.UserTokenViewModels.Add(new EntityLayer.ViewModels.VerifyEmailHub.UserTokenViewModel() { ClientId = Context.ConnectionId, Token = token, User = user });
                 SendEmail.Send($"<a href='{ httpcontext.Request.Scheme + "://" + httpcontext.Request.Host + "/identity/ForgotPassword/" + Uri.EscapeDataString( token)}'>Emailinizi Onaylayın</a>", user.Email, httpcontext);
                 await Clients.Caller.SendAsync("emailExistence", true);
             }

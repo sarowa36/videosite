@@ -1,6 +1,6 @@
 ﻿using EntityLayer.Models.Contents;
 
-namespace VideoSite.ViewModels.ContentController
+namespace EntityLayer.ViewModels.ContentController
 {
     public class ContentGetViewModel
     {

@@ -177,9 +177,9 @@ export default {
             $(node.nextElementSibling).animate({ height: "toggle" });
         },
         async sendRequest() {
-            var data=this.content;
+            var data=JSON.parse(JSON.stringify(this.content));
             data.file=document.querySelector("#poster").files[0]
-            var result =(await axios.postForm("content/"+this.$route.params.method,data)).data;
+            var result =(await axios.postForm("content/"+this.$route.params.method ,data)).data;
             if(result.succeeded){
                 router.go(-1)
             }

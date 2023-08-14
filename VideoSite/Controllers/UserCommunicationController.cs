@@ -1,7 +1,7 @@
 ﻿using EntityLayer.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using VideoSite.ViewModels.UserCommunicationController;
+using EntityLayer.ViewModels.UserCommunicationController;
 
 namespace VideoSite.Controllers
 {

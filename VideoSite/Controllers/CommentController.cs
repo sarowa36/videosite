@@ -4,7 +4,7 @@ using EntityLayer.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using EntityLayer.Models.Contents;
-using VideoSite.ViewModels.CommentController;
+using EntityLayer.ViewModels.CommentController;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 

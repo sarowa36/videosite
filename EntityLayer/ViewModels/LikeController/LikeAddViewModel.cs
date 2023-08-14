@@ -1,6 +1,6 @@
 ﻿using EntityLayer.Enums;
 
-namespace VideoSite.ViewModels.LikeController
+namespace EntityLayer.ViewModels.LikeController
 {
     public class LikeAddViewModel
     {

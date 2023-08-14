@@ -3,7 +3,7 @@ using DataAccessLayer.Repositories;
 using EntityLayer.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
-using VideoSite.ViewModels.MessageHub;
+using EntityLayer.ViewModels.MessageHub;
 
 namespace VideoSite.Hubs
 {
