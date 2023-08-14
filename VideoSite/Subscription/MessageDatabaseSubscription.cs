@@ -1,7 +1,10 @@
 ﻿using DataAccessLayer;
 using EntityLayer.Models.Contents;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Data;
+using System.Security.Permissions;
 using TableDependency.SqlClient;
 using TableDependency.SqlClient.Base.EventArgs;
 using VideoSite.Hubs;
@@ -14,18 +17,27 @@ namespace VideoSite.Subscription
     {
         public readonly IHubContext<MessageHub> hub;
         private readonly IConfiguration configuration;
+        private readonly ILogger logger;
         private SqlTableDependency<Message> sqlTableDependency;
-        public MessageDatabaseSubscription(IConfiguration configuration, IHubContext<MessageHub> hub)
+        public MessageDatabaseSubscription(IConfiguration configuration, IHubContext<MessageHub> hub, ILogger<MessageDatabaseSubscription> logger)
         {
             this.hub = hub;
             this.configuration = configuration;
+            this.logger = logger;
         }
         public void Configure()
         {
-            sqlTableDependency = new SqlTableDependency<Message>(configuration.GetConnectionString("Default"), "Message");
-            sqlTableDependency.OnChanged += OnChanged;
-            sqlTableDependency.OnError += OnError;
-            sqlTableDependency.Start();
+            try
+            {
+                sqlTableDependency = new SqlTableDependency<Message>(configuration.GetConnectionString("Default"), "Message");
+                sqlTableDependency.OnChanged += OnChanged;
+                sqlTableDependency.OnError += OnError;
+                sqlTableDependency.Start();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message);
+            }
         }
         public void OnChanged(object sender, RecordChangedEventArgs<Message> e)
         {

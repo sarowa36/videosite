@@ -1,7 +1,7 @@
 
 
 # Introduction
-I started to produce this project arbitraril and currently not finish. You can [check (I have a problem with my host service. I will solve it as soon as possible)](http://sarowa36.com.tr) live example. Based from [Turkish Movie Website](https://www.turkanime.co/). Please if you have any recommandation share with me.
+I started to produce this project arbitraril and currently not finish. You can [check (the instant messaging feature is not working properly due to the policies of the hosting company)](http://sarowa36.com.tr) live example. Based from [Turkish Movie Website](https://www.turkanime.co/). Please if you have any recommandation share with me.
 
 # Features Im Working On
  - LazyLoad ( Message :white_check_mark:, Content :x:)
@@ -9,6 +9,7 @@ I started to produce this project arbitraril and currently not finish. You can [
  - Content Filter (I did only css design) 
  - Comment reply and Comment like/dislike
  - WatchCount and Content Anchor
+ - Globalization
  - General ui/ux improvments
  - Seo 
 
@@ -36,7 +37,7 @@ I started to produce this project arbitraril and currently not finish. You can [
   },
   "AllowedHosts": "*"
 }`)
- 6. (Attention if you get a error about DbConnection try to add this config to your connection string `Trusted_Connection=True; TrustServerCertificate=True; Encrypt=False`)
+ 6. (Attention if you get a error about DbConnection try to add this config to your connection string `Trusted_Connection=True; TrustServerCertificate=True; Persist Security Info=True; Encrypt=False`)
  7. Now everything its done
  
 # How To Run
