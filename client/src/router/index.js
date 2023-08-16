@@ -26,7 +26,7 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: '/:val',
+      path: '/index',
       name: 'index',
       component: HomeView
     },

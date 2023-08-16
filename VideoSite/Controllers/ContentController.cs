@@ -35,19 +35,19 @@ namespace VideoSite.Controllers
         public async Task<IActionResult> Create(ContentViewModel model)
         {
             var v = new ContentViewModelValidator();
-            v.Validate(model);
-            if (ModelState.IsValid)
+           var validateResult= v.Validate(model);
+            if (validateResult.IsValid)
             {
                 if (model.File != null && model.File.Length > 2)
                     await model.SaveFileAsync(Path.Combine("content", "poster"), x => x.ImageLink, x => model.File);
                 var content = model.AsContent();
                 model.Categories.ForEach(x => content.ContentM2MCategories.Add(new ContentM2MCategory() { CategoryId = x }));
-                r.Create(model.AsContent());
+                r.Create(content);
                 return Ok(new { succeeded = true });
             }
             else
             {
-                return Ok(ModelState.ListInvalidValueErrors());
+                return Ok(validateResult.ListInvalidValueErrors());
             }
         }
         [HttpGet]
@@ -58,7 +58,8 @@ namespace VideoSite.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(ContentViewModel model)
         {
-            if (ModelState.IsValid)
+            var validationResult=(new ContentViewModelValidator(EntityLayer.Enums.CrudMethodEnum.Update)).Validate(model);
+            if (validationResult.IsValid)
             {
                 if (model.File != null && model.File.Length > 2)
                     await model.SaveFileAsync(Path.Combine("content", "poster"), x => x.ImageLink, x => model.File);
@@ -80,11 +81,11 @@ namespace VideoSite.Controllers
                     );
                 }
                 r.Update(content);
-                return Json(model);
+                return Json(new { succeeded =true});
             }
             else
             {
-                return Ok(ModelState.ListInvalidValueErrors());
+                return Ok(validationResult.ListInvalidValueErrors());
             }
         }
         public async Task<IActionResult> Delete(int id)

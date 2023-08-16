@@ -9,7 +9,7 @@ defineProps({
 })
 </script>
 <template>
-    <div class="mt-4 col-xxl-4 col-lg-6 listedcontent">
+    <div class="mt-4 col-xxl-4 col-lg-6 listedcontent" :id="content.id">
         <router-link :to="'/Content/'+content.id" class="title">
             {{content.name}}
         </router-link>

@@ -14,24 +14,14 @@ namespace VideoSite.Controllers
     {
         private readonly ADC db;
         private readonly UserManager<ApplicationUser> userManager;
-        private ApplicationUser? AppUser;
         public LikeController(ADC db, UserManager<ApplicationUser> userManager)
         {
             this.db = db;
             this.userManager = userManager;
         }
-        public async override void OnActionExecuting(ActionExecutingContext context)
-        {
-            try
-            {
-            if(HttpContext.User!=null)
-            AppUser = await userManager.GetUserAsync(HttpContext.User);
-            }
-            catch (Exception ex) {}
-            base.OnActionExecuting(context);
-        }
         public async Task<IActionResult> Get(int episodeId)
         {
+            var AppUser = await userManager.GetUserAsync(HttpContext.User);
             if (AppUser != null)
             {
                 return Ok(new
@@ -48,7 +38,8 @@ namespace VideoSite.Controllers
         }
         public async Task<IActionResult> CUD(LikeAddViewModel model)
         {
-            var val = db.UserM2MLike.FirstOrDefault(x => x.UserId == AppUser.Id && x.EpisodeId == model.EpisodeId && x.LikeDislike != model.LikeOrDislike);
+            var AppUser = await userManager.GetUserAsync(HttpContext.User);
+            var val = db.UserM2MLike.FirstOrDefault(x => x.UserId == AppUser.Id && x.EpisodeId == model.EpisodeId);
             if (val != null)
             {
                 if (val.LikeDislike != model.LikeOrDislike)

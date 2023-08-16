@@ -14,5 +14,14 @@ namespace VideoSite.Helpers
             }
             return data;
         }
+        public static Dictionary<string, object> ListInvalidValueErrors(this FluentValidation.Results.ValidationResult ModelState)
+        {
+            Dictionary<string, object> data = new Dictionary<string, object>();
+            foreach (var error in ModelState.Errors)
+            {
+                data.Add(error.PropertyName, new[] {error.ErrorMessage});
+            }
+            return data;
+        }
     }
 }

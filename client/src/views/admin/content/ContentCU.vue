@@ -19,19 +19,21 @@ import axios from "axios";
             <span class="text-danger" v-if="errors.description" v-for="err in errors.description">{{ err }}</span>
             <div class="col-12 mt-3">
                 <label>Kategoriler</label>
-            <select2 multiple="" v-model="content.categories">
-                <option v-for="cat in allCategories" :value="cat.id">{{ cat.name }}</option>
-            </select2>
-        </div>
+                <select2 multiple="" v-model="content.categories">
+                    <option v-for="cat in allCategories" :value="cat.id">{{ cat.name }}</option>
+                </select2>
+            </div>
             <div class="mt-4 mb-2">Bölüm ve Kaynak Düzenleme</div>
             <div class="col-5">
                 <ul class="episode_and_src_list">
                     <li v-for="ep in content.episodeList" :key="ep.id">
-                       <div @click="(e) =>selectVal(e, ep , Episode.name)">{{ ep.name }}</div><a href="#" @click="openSrcMenu">
+                        <div @click="(e) => selectVal(e, ep, Episode.name)">{{ ep.name }}</div><a href="#"
+                            @click="openSrcMenu">
                             <FontAwesomeIcon icon="arrow-down" />
                         </a>
                         <ul style="display: none;">
-                            <li v-for="src in ep.sourceList" @click="(e) => selectVal(e, src, Source.name)">{{ src.name }}</li>
+                            <li v-for="src in ep.sourceList" @click="(e) => selectVal(e, src, Source.name)">{{ src.name }}
+                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -49,22 +51,23 @@ import axios from "axios";
             </div>
             <div class="col-5 list_of_src">
                 <Textbox v-if="selected.name != null" v-model="selected.name" placeholder="İsim" />
-                <Textbox v-if="selected.className == Source.name" v-model="selected.iframeCode" placeholder="İframe Kodu" type="textarea"
-                    height="150px" />
+                <span class="text-danger" v-for="err in errors.selected">{{ err }}</span>
+                <Textbox v-if="selected.className == Source.name" v-model="selected.iframeCode" placeholder="İframe Kodu"
+                    type="textarea" height="150px" />
             </div>
             <span class="text-danger" v-if="errors.episodeList" v-for="err in errors.episodeList">{{ err }}</span>
             <div class="mt-4"></div>
             <div class="col-4">
-                <img v-if="!base64img" :src="API_URL+content.imageLink" alt="">
+                <img v-if="!base64img" :src="API_URL + content.imageLink" alt="">
                 <img v-else :src="base64img" alt="">
             </div>
             <div class="col-8">
-                <Textbox type="file" accept="image/*" placeholder="Poster Yükleyiniz" v-model="base64img" id="poster"/>
+                <Textbox type="file" accept="image/*" placeholder="Poster Yükleyiniz" v-model="base64img" id="poster" />
             </div>
             <span class="text-danger" v-if="errors.file" v-for="err in errors.file">{{ err }}</span>
             <div class="col-2">
                 <button class="btn_theme" @click="sendRequest">Kaydet</button>
-            </div>  
+            </div>
         </div>
     </EditLayout>
 </template>
@@ -86,6 +89,7 @@ import axios from "axios";
 .episode_and_src_list>li>div {
     width: 100%;
     padding-left: 13px;
+    min-height: 24px;
 }
 
 .episode_and_src_list>li>a {
@@ -127,29 +131,31 @@ export default {
         return {
             content: new Content,
             selected: {},
-            base64img:"",
-            allCategories:[],
-            errors:{}
+            base64img: "",
+            allCategories: [],
+            errors: {}
         }
     },
-     async created() {
-        this.allCategories=(await axios.get("category/getlist")).data;
-        if(this.$route.params.method.toLowerCase()=="update" && this.$route.params.id){
-         this.fetchData(this.$route.params.id)
+    async created() {
+        this.allCategories = (await axios.get("category/getlist")).data;
+        if (this.$route.params.method.toLowerCase() == "update" && this.$route.params.id) {
+            this.fetchData(this.$route.params.id)
         }
     },
     methods: {
-        async fetchData(id){
-            this.content=(await axios.get("content/update/"+this.$route.params.id)).data
+        async fetchData(id) {
+            this.content = (await axios.get("content/update/" + this.$route.params.id)).data
         },
-        selectVal(event, val,className) {
-            document.querySelectorAll(".episode_and_src_list .active").forEach(element => { element.classList.remove("active") });
-            event.originalTarget.classList.add("active");
-            this.selected = val
-            this.selected.className=className;
+        selectVal(event, val, className) {
+            if (!this.errors.selected) {
+                document.querySelectorAll(".episode_and_src_list .active").forEach(element => { element.classList.remove("active") });
+                event.originalTarget.classList.add("active");
+                this.selected = val
+                this.selected.className = className;
+            }
         },
-        removeSelected() { 
-            if (this.selected.className== Source.name) {
+        removeSelected() {
+            if (this.selected.className == Source.name) {
                 this.content.episodeList.filter((x) => x.id == this.selected.episode_id)[0].sourceList = this.content.episodeList.filter((x) => x.id == this.selected.episode_id)[0].sourceList.filter(x => x.id != this.selected.id)
             }
             else {
@@ -158,11 +164,37 @@ export default {
             this.selected = {};
         },
         addEpisode() {
-            var newEp = new Episode({ name: "Yeni Bölüm", sourceList: [] });
+            var newEpisodeName = "";
+            if (this.content.episodeList.length == 0) {
+                newEpisodeName = "Bölüm 1"
+            }
+            else {
+                var lastEpisodeName = this.content.episodeList[this.content.episodeList.length - 1].name;
+                if (lastEpisodeName.includes("Bölüm ") && parseInt(lastEpisodeName.split("Bölüm ")[1])) {
+                    newEpisodeName = "Bölüm " + (parseInt(lastEpisodeName.split("Bölüm ")[1]) + 1);
+                }
+                else {
+                    newEpisodeName = "Yeni Bölüm";
+                }
+            }
+            var newEp = new Episode({ name: newEpisodeName, sourceList: [] });
             this.content.episodeList.push(newEp);
         },
         addSource() {
-            var newSrc = new Source({name: "Yeni Kaynak", episode_id: this.selected.id, iframeCode: "" });
+            var newSrcName = "";
+            if (this.selected.sourceList.length == 0) {
+                newSrcName = "Kaynak 1"
+            }
+            else {
+                var lastEpisodeName = this.selected.sourceList[this.selected.sourceList.length - 1].name;
+                if (lastEpisodeName.includes("Kaynak ") && parseInt(lastEpisodeName.split("Kaynak ")[1])) {
+                    newSrcName = "Kaynak " + (parseInt(lastEpisodeName.split("Kaynak ")[1]) + 1);
+                }
+                else {
+                    newSrcName = "Yeni Kaynak";
+                }
+            }
+            var newSrc = new Source({ name: newSrcName, episode_id: this.selected.id, iframeCode: "" });
             this.selected.sourceList.push(newSrc);
         },
         openSrcMenu(event) {
@@ -177,14 +209,24 @@ export default {
             $(node.nextElementSibling).animate({ height: "toggle" });
         },
         async sendRequest() {
-            var data=JSON.parse(JSON.stringify(this.content));
-            data.file=document.querySelector("#poster").files[0]
-            var result =(await axios.postForm("content/"+this.$route.params.method ,data)).data;
-            if(result.succeeded){
+            var data = JSON.parse(JSON.stringify(this.content));
+            data.file = document.querySelector("#poster").files[0]
+            var result = (await axios.postForm("content/" + this.$route.params.method, data)).data;
+            if (result.succeeded) {
                 router.go(-1)
             }
-            else{
-                this.errors=result;
+            else {
+                this.errors = result;
+            }
+        }
+    },
+    watch: {
+        "selected.name"(newVal, oldVal) {
+            if (!newVal && this.selected.className!=null) {
+                this.errors.selected = ["Lütfen Bir Değer Giriniz"]
+            }
+            else if (newVal && this.errors.selected) {
+                delete this.errors.selected;
             }
         }
     }

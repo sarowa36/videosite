@@ -20,9 +20,9 @@ defineEmits(["update:modelValue"])
 <template>
     <div class="form_group">
         <span v-if="!error.isValid"></span>
-        <input ref="textbox" v-if="type!='textarea' && type!='file'" :id="id" :type="type" class="myinput" :placeholder="placeholder" @blur="checkVal" v-model="value" @keydown="keydownEvent" />
-        <input ref="textbox" v-else-if="type=='file'" :id="id" :type="type" class="myinput" :placeholder="placeholder" @change="readimg" @keydown="keydownEvent"/>
-        <textarea ref="textbox" v-else class="myinput" :placeholder="placeholder" @blur="checkVal" v-model="value" :style="'height:'+height" @keydown="keydownEvent"></textarea>
+        <input ref="textbox" v-if="type!='textarea' && type!='file'" :id="id" :type="type" :class="'myinput '+ (value ? 'with_value':'')" :placeholder="placeholder" @blur="checkVal" v-model="value" @keydown="keydownEvent" />
+        <input ref="textbox" v-else-if="type=='file'" :id="id" :type="type" :class="'myinput '+ (value ? 'with_value':'')" :placeholder="placeholder" @change="readimg" @keydown="keydownEvent"/>
+        <textarea ref="textbox" v-else :class="'myinput '+ (value ? 'with_value':'')" :placeholder="placeholder" @blur="checkVal" v-model="value" :style="'height:'+height" @keydown="keydownEvent"></textarea>
         <label :for="id" class="input_label">{{placeholder}}</label>
     </div>
 </template>
