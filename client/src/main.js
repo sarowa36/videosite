@@ -9,6 +9,7 @@ import jQuery from 'jquery'
 import select2 from "select2/dist/js/select2.full.min.js";
 import axios from "axios";
 import VueScreen from "vue-screen"
+import Helpers from './Helpers'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./assets/main.css"
@@ -50,5 +51,7 @@ import "jquery-ui/dist/themes/ui-darkness/jquery-ui.min.css"
     app.use(router);
     app.use(VueScreen,"bootstrap")
     
+    app.mixin(Helpers);
+
     app.mount('#app')
 })()

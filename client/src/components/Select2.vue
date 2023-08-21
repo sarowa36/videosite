@@ -18,13 +18,17 @@ export default {
     return {
     }
   },
+  methods:{
+    onchange(){
+      var node = this.$refs.select;
+      this.value=$(node).val();
+    }
+  },
   mounted() {
     var node = this.$refs.select;
     if (!$(node).hasClass("select2-hidden-accessible")) {
       $(node).select2({ theme: "classic", width: '100%' });
-      $(node).on("change", () => {
-        this.$emit("update:modelValue", $(node).val())
-      })
+      $(node).on("change.ss", this.onchange)
     }
   },
   beforeUnmount() {
@@ -32,9 +36,22 @@ export default {
     $(node).off().select2("destroy")
   },
   watch:{
-    "modelValue"(newVal,oldVal){
-      if(oldVal==undefined && newVal){
-        $(this.$refs.select).val(this.modelValue).trigger("change")
+    "value"(newVal,oldVal){
+      var deepClonedNewVal=newVal ? JSON.parse(JSON.stringify(newVal)):undefined;
+      var deepClonedOldVal=oldVal ? JSON.parse(JSON.stringify(oldVal)) :undefined;
+      const node =this.$refs.select;
+      $(node).off(".ss")
+      $(node).val(this.modelValue).trigger("change")
+      $(node).on("change.ss",this.onchange)
+    }
+  },
+  computed:{
+    value:{
+      get(){
+        return this.modelValue;
+      },
+      set(val){
+        this.$emit("update:modelValue",val);
       }
     }
   },

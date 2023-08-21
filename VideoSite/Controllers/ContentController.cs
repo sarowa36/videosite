@@ -11,6 +11,7 @@ using EntityLayer.Models.M2MRelationships;
 using ToolsLayer.List;
 using VideoSite.Helpers;
 using BusinessLayer.Validators.ViewModels.ContentController;
+using FluentValidation.AspNetCore;
 
 namespace VideoSite.Controllers
 {
@@ -23,11 +24,11 @@ namespace VideoSite.Controllers
             this.db = db;
             r = new ContentRepository(this.db);
         }
-        public async Task<IActionResult> GetList(int? index)
+        public async Task<IActionResult> GetList(ContentGetListRequestViewModel index)
         {
-            return Json(r.GetAll(index));
+            return Json(r.GetAll());
         }
-        public async Task<IActionResult> Get(int id, int episodeId)
+        public async Task<IActionResult> Get(int id)
         {
             return Json(new ContentGetViewModel(r.Get(id, db.Content.Include(x => x.ContentM2MCategories).ThenInclude(x => x.Category).Include(x => x.EpisodeList).ThenInclude(x => x.SourceList))));
         }

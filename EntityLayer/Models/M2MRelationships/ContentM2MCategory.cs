@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EntityLayer.Models.Contents;
+using Microsoft.EntityFrameworkCore;
 
 namespace EntityLayer.Models.M2MRelationships
 {
     public class ContentM2MCategory
     {
-        public int Id { get; set; }
         public int ContentId { get; set; }
         [ForeignKey("ContentId")]
         public Content Content { get; set; }

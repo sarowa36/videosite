@@ -12,5 +12,9 @@ namespace DataAccessLayer.Repositories
         public ContentRepository(ADC db):base(db)
         {
         }
+        public void Counter(int id,string ip, string username)
+        {
+
+        }
     }
 }

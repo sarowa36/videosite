@@ -4,6 +4,7 @@ using EntityLayer.Models.Identity;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using VideoSite;
 using VideoSite.Hubs;
@@ -18,6 +19,7 @@ builder.Services.AddMvc().AddFluentValidation(x=>x.RegisterValidatorsFromAssembl
 {
     x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
     x.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+    x.SerializerSettings.Converters.Add(new StringEnumConverter());
 });
 builder.Services.AddSignalR();
 builder.Services.AddDbContext<ADC>(x =>

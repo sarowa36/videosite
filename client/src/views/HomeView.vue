@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import axios from "axios";
 import { Content } from '../models/Content';
 import router from '../router';
+import { Filter } from '../models/Filter';
+import { JsonHubProtocol } from '@microsoft/signalr';
 </script>
 
 <template>
@@ -13,16 +15,16 @@ import router from '../router';
       <div class="col-12 filter">
         <div class="filter_bar">
           <div class="filter_list">
-            <div v-if="filter.category" @click="removeFilter('category')">
+            <div v-if="!Filter.CheckDefaultValue('category',filter.category)" @click="removeFilter('category')">
               <FontAwesomeIcon icon="xmark"></FontAwesomeIcon> <strong>Kategori:</strong> {{ filter.category.toString() }}
             </div>
-            <div v-if="filter.keyword" @click="removeFilter('keyword')">
+            <div v-if="!Filter.CheckDefaultValue('keyword',filter.keyword)" @click="removeFilter('keyword')">
               <FontAwesomeIcon icon="xmark"></FontAwesomeIcon> <strong>Anahtar Kelime:</strong> {{ filter.keyword }}
             </div>
-            <div v-if="filter.order" @click="removeFilter('order')">
+            <div v-if="!Filter.CheckDefaultValue('order',filter.order)" @click="removeFilter('order')">
               <FontAwesomeIcon icon="xmark"></FontAwesomeIcon> <strong>Sırala:</strong> {{ filter.order }}
             </div>
-            <div v-if="filter.release" @click="removeFilter('release')">
+            <div v-if="!Filter.CheckDefaultValue('release',filter.release)" @click="removeFilter('release')">
               <FontAwesomeIcon icon="xmark"></FontAwesomeIcon> <strong>Yayın Tarihi:</strong> {{ filter.release }}
             </div>
           </div>
@@ -57,7 +59,7 @@ import router from '../router';
 
           </div>
           <div class="col-md-3 mt-2 text-end">
-            <button class="btn_theme" @click="setFilter">
+            <button class="btn_theme" @click="setFilterToQuery">
               <FontAwesomeIcon icon="search"></FontAwesomeIcon> Ara
             </button>
           </div>
@@ -108,14 +110,9 @@ import router from '../router';
 export default {
   data() {
     return {
-      filter: {
-        order: "",
-        keyword: "",
-        category: [],
-        release: ""
-      },
+      filter: new Filter(),
       contents: [new Content()],
-      lazyLoadObserver: new IntersectionObserver(()=>{},{}),
+      lazyLoadObserver: new IntersectionObserver(() => { }, {}),
       updateFinishedEvents: []
     }
   },
@@ -133,51 +130,58 @@ export default {
     toggleFilterBar(e) {
       $(".filter_row").animate({ height: "toggle" })
     },
-    removeFilter(filterName) {
-      if (Array.isArray(this.filter[filterName])) {
-        this.filter[filterName] = [];
-      }
-      else {
-        this.filter[filterName] = "";
-      }
-    },
-    setFilter(){
-      router.push({query:this.filter})
-    },
-    async getData(id) {
-      if (!id) {
-        this.contents = [];
-        this.lazyLoadObserver = new IntersectionObserver(([e]) => {
-          if(e.isIntersecting){
-            this.lazyLoadObserver.unobserve(e.target);
-            this.getData(this.contents[this.contents.length-1].id)
-          }
-        }, {
-          rootMargin: "0px 0px",
+    setFilterBarObserve() {
+      const observer = new IntersectionObserver(
+        ([e]) => {
+          e.target.classList.toggle("shadow", e.intersectionRatio < 1);
+        },
+        {
+          rootMargin: "-16px 0px",
           threshold: [1]
         });
-      }
-      var {data}=(await axios.get("content/getlist/" + id));
+      observer.observe(document.querySelector(".filter"));
+    },
+    removeFilter(filterName) {
+      this.filter[filterName]=Filter.GetDefaultValue(filterName);
+    },
+    setFilterToQuery() {
+      router.replace({ query: this.deepClone(this.filter) })
+    },
+    setFilterFromQuery() {
+      this.filter = new Filter(this.$route.query);
+    },
+    setObserve() {
+      this.lazyLoadObserver = new IntersectionObserver(([e]) => {
+        if (e.isIntersecting) {
+          this.lazyLoadObserver.unobserve(e.target);
+          this.filter.id = this.contents[this.contents.length - 1].id;
+          this.setFilterToQuery();
+        }
+      }, {
+        rootMargin: "0px 0px",
+        threshold: [1]
+      });
+    },
+    observeContent() {
+      var node = this.$refs.row.children[this.$refs.row.children.length - 5]
+      console.log(node)
+      this.lazyLoadObserver.observe(node)
+    },
+    async getData() {
+      var postData = JSON.parse(JSON.stringify(this.filter));
+      var { data } = (await axios.get("content/getlist", { params: this.filter }));
       data.forEach(element => {
         this.contents.push(new Content(element));
       });
-      this.updateFinishedEvents.push(() => {
-        var node = this.$refs.row.children[this.$refs.row.children.length-5]
-        this.lazyLoadObserver.observe(node)
-      })
     }
   },
-  mounted() {
-    this.getData()
-    const observer = new IntersectionObserver(
-      ([e]) => {
-        e.target.classList.toggle("shadow", e.intersectionRatio < 1);
-      },
-      {
-        rootMargin: "-16px 0px",
-        threshold: [1]
-      });
-    observer.observe(document.querySelector(".filter"));
+  async mounted() {
+    this.contents = [];
+    this.setFilterFromQuery()
+    this.setObserve();
+    await this.getData()
+    this.observeContent()
+    this.setFilterBarObserve();
   },
   updated() {
     if (this.updateFinishedEvents.length > 0) {
@@ -188,7 +192,24 @@ export default {
       });
       this.updateFinishedEvents = [];
     }
-    
+
+  },
+  watch: {
+    async "$route.query"(newVal, oldVal) {
+      var clonedNewVal=this.deepClone(newVal);
+      var clonedOldVal=this.deepClone(oldVal);
+      var [newId,oldId]=[clonedNewVal["id"],clonedOldVal["id"]];
+      this.setFilterFromQuery()
+      if(!oldId && newId>0 || oldId && oldId!=newId){
+        await this.getData()
+      this.observeContent();
+      }
+      else{
+        this.contents=[];
+        await this.getData()
+      this.observeContent();
+      }
+    },
   }
 }
 </script>

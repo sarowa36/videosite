@@ -26,6 +26,7 @@ namespace DataAccessLayer
             builder.Entity<UserM2MCategory>().HasKey(x =>new{ x.CategoryId,x.UserId});
             builder.Entity<ContentM2MCategory>().HasKey(x => new { x.CategoryId, x.ContentId });
             builder.Entity<UserM2MLike>().HasKey(x => new { x.UserId, x.EpisodeId });
+            builder.Entity<ContentWatchCounts>().HasIndex(x => new{ x.EpisodeId,x.Ip,x.UserId});
             builder.Entity<Message>().ToTable(x => x.HasTrigger("Message"));
             builder.ApplyGlobalFilters<AOfDefaultContent>(x => !x.IsDeleted);
             base.OnModelCreating(builder);
