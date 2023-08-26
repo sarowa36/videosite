@@ -7,11 +7,11 @@ namespace VideoSite.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ADC db;
+        private readonly ADC _db;
         private readonly CategoryRepository r;
         public CategoryController(ADC db)
         {
-            this.db = db;
+            this._db = db;
             r = new CategoryRepository(db);
         }
         public async Task<IActionResult> GetList()
@@ -22,6 +22,18 @@ namespace VideoSite.Controllers
         public async Task<IActionResult> Create(string CategoryName)
         {
             r.Create(new EntityLayer.Models.Contents.Category() { Name= CategoryName });
+            return Ok();
+        }
+        public async Task<IActionResult> Update(int id)
+        {
+            return Ok(r.Get(id));
+        }
+        [HttpPost]
+        public async Task<IActionResult> Update(int id,string value)
+        {
+            var a = r.Get(id);
+            a.Name= value;
+            r.Update(a);
             return Ok();
         }
         public async Task<IActionResult> Delete(int id)

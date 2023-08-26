@@ -6,16 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ToolsLayer.List
+namespace DataAccessLayer.Helpers
 {
     public static class ManageList
     {
-        public static void RemoveBeforeAddNew(this IEnumerable<int> beforeList, IEnumerable<int> newList,Action<IEnumerable<int>> removeFunc,Action<IEnumerable<int>> addFunc)
+        public static void RemoveBeforeAddNew(this IEnumerable<int> beforeList, IEnumerable<int> newList, Action<IEnumerable<int>> removeFunc, Action<IEnumerable<int>> addFunc)
         {
             var removeList = beforeList.Except(newList);
             var addlist = newList.Except(beforeList);
-            if(removeList!=null && removeList.Count()>0)
-            removeFunc.Invoke(removeList);
+            if (removeList != null && removeList.Count() > 0)
+                removeFunc.Invoke(removeList);
             if (addlist != null && addlist.Count() > 0)
                 addFunc.Invoke(addlist);
         }

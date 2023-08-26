@@ -16,8 +16,16 @@ import router from '../../../router';
 export default {
 data(){
     return{
+        id:0,
         categoryName:""
     }
+},
+async mounted(){
+    if(this.$route.params.method.toLowerCase() == "update"){
+var {data}=(await axios.get("category/update/"+this.$route.params.id));
+this.id=data.id;
+this.categoryName=data.name;
+}
 },
 methods:{
     async sendRequest(){

@@ -1,0 +1,21 @@
+<Playlist Version="2.0">
+  <Rule Name="Includes" Match="Any">
+    <Rule Match="All">
+      <Property Name="Solution" />
+      <Rule Match="Any">
+        <Rule Match="All">
+          <Property Name="Project" Value="DataAccessLayer.UnitTest" />
+          <Rule Match="Any">
+            <Rule Match="All">
+              <Property Name="Namespace" Value="DataAccessLayer.UnitTest.Repositories" />
+              <Rule Match="Any">
+                <Property Name="Class" Value="ContentRepositoryTest" />
+                <Property Name="Class" Value="CategoryRepositoryTest" />
+              </Rule>
+            </Rule>
+          </Rule>
+        </Rule>
+      </Rule>
+    </Rule>
+  </Rule>
+</Playlist>

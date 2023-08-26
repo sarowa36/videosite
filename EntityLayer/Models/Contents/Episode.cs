@@ -23,5 +23,6 @@ namespace EntityLayer.Models.Contents
         [Required, AllowNull]
         [ForeignKey("ContentId")]
         public Content? Content { get; set; }
+        public List<ContentWatchCounts> WatchCounts { get; set; }
     }
 }

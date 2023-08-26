@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace EntityLayer.Models.Contents
 {
-    [Keyless]
     public class ContentWatchCounts
     {
         public string Ip { get; set; }

@@ -8,10 +8,11 @@ using Newtonsoft.Json;
 using ToolsLayer.FileManagement;
 using EntityLayer.ViewModels.ContentController;
 using EntityLayer.Models.M2MRelationships;
-using ToolsLayer.List;
 using VideoSite.Helpers;
 using BusinessLayer.Validators.ViewModels.ContentController;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
+using EntityLayer.Models.Identity;
 
 namespace VideoSite.Controllers
 {
@@ -19,10 +20,12 @@ namespace VideoSite.Controllers
     {
         public readonly ADC db;
         public readonly ContentRepository r;
-        public ContentController(ADC db)
+        public readonly UserManager<ApplicationUser> userManager;
+        public ContentController(ADC db, UserManager<ApplicationUser> userManager)
         {
             this.db = db;
             r = new ContentRepository(this.db);
+            this.userManager = userManager;
         }
         public async Task<IActionResult> GetList(ContentGetListRequestViewModel index)
         {
@@ -32,15 +35,23 @@ namespace VideoSite.Controllers
         {
             return Json(new ContentGetViewModel(r.Get(id, db.Content.Include(x => x.ContentM2MCategories).ThenInclude(x => x.Category).Include(x => x.EpisodeList).ThenInclude(x => x.SourceList))));
         }
+        public async Task<IActionResult> Watch(int id)
+        {
+
+            r.Counter(id,
+                HttpContext.GetIp(),
+                (await userManager.GetUserAsync(HttpContext.User))?.Id);
+            return Ok();
+        }
         [HttpPost]
         public async Task<IActionResult> Create(ContentViewModel model)
         {
             var v = new ContentViewModelValidator();
-           var validateResult= v.Validate(model);
+            var validateResult = v.Validate(model);
             if (validateResult.IsValid)
             {
                 if (model.File != null && model.File.Length > 2)
-                    await model.SaveFileAsync(Path.Combine("content", "poster"), x => x.ImageLink, x => model.File);
+                     model.ImageLink=await model.File.SaveFileAsync(Path.Combine("content", "poster"));
                 var content = model.AsContent();
                 model.Categories.ForEach(x => content.ContentM2MCategories.Add(new ContentM2MCategory() { CategoryId = x }));
                 r.Create(content);
@@ -59,11 +70,11 @@ namespace VideoSite.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(ContentViewModel model)
         {
-            var validationResult=(new ContentViewModelValidator(EntityLayer.Enums.CrudMethodEnum.Update)).Validate(model);
+            var validationResult = (new ContentViewModelValidator(EntityLayer.Enums.CrudMethodEnum.Update)).Validate(model);
             if (validationResult.IsValid)
             {
                 if (model.File != null && model.File.Length > 2)
-                    await model.SaveFileAsync(Path.Combine("content", "poster"), x => x.ImageLink, x => model.File);
+                     model.ImageLink= await model.File.SaveFileAsync(Path.Combine("content", "poster"));
                 var beforeList = db.ContentM2MCategories.Where(x => x.ContentId == model.Id).Select(x => x.CategoryId).ToList();
                 var newList = model.Categories;
                 var removeList = beforeList.Except(newList);
@@ -82,7 +93,7 @@ namespace VideoSite.Controllers
                     );
                 }
                 r.Update(content);
-                return Json(new { succeeded =true});
+                return Json(new { succeeded = true });
             }
             else
             {

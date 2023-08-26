@@ -17,5 +17,16 @@ namespace EntityLayer.ViewModels.IdentityController
         [Required]
         public IFormFile ProfileImage { get; set; }
         public List<int>? Categories { get; set; }
+
+        public ApplicationUser AsApplicationUser()
+        {
+            return new ApplicationUser()
+            {
+                Email = this.Email,
+                UserName = this.UserName,
+                EmailConfirmed = true,
+                LockoutEnabled = false
+            };
+        }
     }
 }

@@ -36,6 +36,10 @@ namespace VideoSite.Controllers
                 return Ok();
             }
         }
+        /// <summary>
+        /// Action for Create, Update, Delete operations
+        /// </summary>
+        /// <returns>Like Dislike Counts</returns>
         public async Task<IActionResult> CUD(LikeAddViewModel model)
         {
             var AppUser = await userManager.GetUserAsync(HttpContext.User);

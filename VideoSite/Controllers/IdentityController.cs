@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ToolsLayer.FileManagement;
-using ToolsLayer.List;
 using EntityLayer.ViewModels.IdentityController;
 using EntityLayer.Models.M2MRelationships;
 using VideoSite.Helpers;
 using VideoSite.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using VideoSite.InMemoryData;
+using DataAccessLayer.Helpers;
 
 namespace VideoSite.Controllers
 {
@@ -70,14 +70,9 @@ namespace VideoSite.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser()
-                {
-                    Email = model.Email,
-                    UserName = model.UserName,
-                    ImageLink = await model.ProfileImage.SaveFileAsync(Path.Combine("content", "profile")),
-                    EmailConfirmed = true,
-                    LockoutEnabled = false
-                };
+                var user = model.AsApplicationUser();
+                user.ImageLink = await model.ProfileImage.SaveFileAsync(Path.Combine("content", "profile"));
+               
                 model.Categories.ForEach(x => user.UserM2MCategory.Add(new EntityLayer.Models.M2MRelationships.UserM2MCategory() { CategoryId = x }));
                 var result = await userManager.CreateAsync(user);
                 if (result.Succeeded) { 

@@ -26,5 +26,23 @@ namespace DataAccessLayer.Repositories
             var val = query.Take(DefaultCount).ToList();
             return val;
         }
+        public void Create(Message val)
+        {
+            db.Message.Add(val);
+            db.SaveChanges();
+        }
+        public IEnumerable<object> GetUsersForMessaging(string CurrentUserId)
+        {
+            return db.Users
+              .Where(x => x.Id != CurrentUserId).Select(x => new
+              {
+                  x.Id,
+                  x.ImageLink,
+                  x.UserName,
+                  lastMessage = db.Message.OrderBy(x => x.Date).Where(y => y.FromId == x.Id && y.ToId == CurrentUserId || y.ToId == x.Id && y.FromId == CurrentUserId).Select(x => new { x.Text, x.Date }).LastOrDefault()
+              }).OrderByDescending(x => x.lastMessage.Date).ToList();
+        }
+        public string GetUserImage(string id)=> db.Users.Where(x => x.Id == id).Select(x => x.ImageLink).FirstOrDefault();
+        
     }
 }

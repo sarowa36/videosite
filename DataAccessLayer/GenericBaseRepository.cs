@@ -1,4 +1,7 @@
-﻿using EntityLayer.Base;
+﻿using DataAccessLayer.ParamaterPass;
+using EntityLayer.Base;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,17 +11,48 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer
 {
-    public abstract class GenericBaseRepository<T> where T : AOfDefaultContent
+    public abstract class GenericBaseRepository<T,TParam>:GenericBaseRepository<T> where T : AOfDefaultContent where TParam:IParamaterPass<T>
+    {
+        public GenericBaseRepository(ADC db):base(db)
+        {
+        }
+        public virtual string? Create(T t,TParam param)
+        {
+            return Create(t);
+        }
+        public virtual T Get(int id,TParam param)
+        {
+            return Get(id);
+        }
+
+        public virtual List<T> GetAll(TParam param,int? index = null, int? count = null)
+        {
+            return GetAll(index, count);
+        }
+        public virtual string? Update(T t, TParam param)
+        {
+            return Update(t);
+        }
+        public virtual string? Delete(T t, TParam param)
+        {
+            return Delete(t);
+        }
+        public virtual string? Delete(int id, TParam param)
+        {
+            return Delete(id);
+        }
+    }
+    public abstract class GenericBaseRepository<T> where T : AOfDefaultContent 
     {
         protected readonly ADC db;
         public GenericBaseRepository(ADC db)
         {
             this.db = db;
         }
-        public virtual void Create(T t)
+        public virtual string? Create(T t)
         {
-            db.Set<T>().Add(t);
-            db.SaveChanges();
+           db.Set<T>().Add(t);
+            return SaveChanges();
         }
         public virtual T Get(int id)
         {
@@ -41,22 +75,34 @@ namespace DataAccessLayer
         {
             return GetAll(db.Set<T>().AsQueryable(), index, count);
         }
-        public virtual void Update(T t)
+        public virtual string? Update(T t)
         {
             db.Set<T>().Update(t);
-            db.SaveChanges();
+           return SaveChanges();
         }
-        public virtual void Delete(T t)
+        public virtual string? Delete(T t)
         {
             t.IsDeleted = true;
             db.Set<T>().Update(t);
-            db.SaveChanges();
+            return SaveChanges();
         }
-        public virtual void Delete(int id)
+        public virtual string? Delete(int id)
         {
             var val = db.Set<T>().Find(id);
             if (val != null)
-                Delete(val);
+               return Delete(val);
+            return null;
+        }
+        protected virtual string? SaveChanges()
+        {
+            string? val = null;
+            try { 
+            db.SaveChanges();
+            }
+            catch(Exception ex) {
+                val = ex.Message;
+            }
+            return val;
         }
     }
 }

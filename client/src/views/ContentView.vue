@@ -37,10 +37,10 @@ import { watch } from "vue";
                     </li>
                 </ul>
                 <div class="parentof_btn_like_dislike">
-                    <button :class="likeOrDislike.currentUserVal==0 ? 'active':''" @click="(e)=>likeOrDislikeAdd(e,0)">
-                        <FontAwesomeIcon icon="thumbs-up" /> {{likeOrDislike.likeCount}}
+                    <button :class="likeOrDislike.currentUserVal == 'Like' ? 'active' : ''" @click="(e) => likeOrDislikeAdd(e, 0)">
+                        <FontAwesomeIcon icon="thumbs-up" /> {{ likeOrDislike.likeCount }}
                     </button>
-                    <button :class="likeOrDislike.currentUserVal==1 ? 'active':''" @click="(e)=>likeOrDislikeAdd(e,1)">
+                    <button :class="likeOrDislike.currentUserVal == 'Dislike' ? 'active' : ''" @click="(e) => likeOrDislikeAdd(e, 1)">
                         <FontAwesomeIcon icon="thumbs-down" /> {{ likeOrDislike.dislikeCount }}
                     </button>
                 </div>
@@ -88,7 +88,7 @@ import { watch } from "vue";
                                     Yap</button></div>
                         </div>
                         <div v-for="i in comments">
-                           <RouterLink :to="'/user/'+i.userName"><img :src="i.imageLink" alt=""></RouterLink>
+                            <RouterLink :to="'/user/' + i.userName"><img :src="i.imageLink" alt=""></RouterLink>
                             <div class="content_text">
                                 <div class="title">{{ i.userName }}</div>
                                 <span v-if="!i.isOverflow" class="content_text">
@@ -115,10 +115,10 @@ export default {
             content: new Content(),
             currentEpisode: new Episode({}),
             currentComment: new Comment(),
-            likeOrDislike:{
-                currentUserVal:null,
-                dislikeCount:null,
-                likeCount:null
+            likeOrDislike: {
+                currentUserVal: null,
+                dislikeCount: null,
+                likeCount: null
             }
         }
     },
@@ -126,7 +126,7 @@ export default {
         resizeEpisodeNode() {
             var doit;
             var resizedw = () => {
-                document.querySelector(".list_of_episode").style.height = (this.$refs.tabcontent.offsetWidth-24) / 1.77 + "px";
+                document.querySelector(".list_of_episode").style.height = (this.$refs.tabcontent.offsetWidth - 24) / 1.77 + "px";
             }
             resizedw()
             window.onresize = function () {
@@ -134,9 +134,9 @@ export default {
                 doit = setTimeout(resizedw, 100);
             };
         },
-        async likeOrDislikeAdd(e,param){
-            this.likeOrDislike.currentUserVal=param;
-            this.likeOrDislike=(await axios.postForm("like/CUD",{episodeId:this.currentEpisode.id,likeOrDislike:param})).data
+        async likeOrDislikeAdd(e, param) {
+            this.likeOrDislike.currentUserVal = param;
+            this.likeOrDislike = (await axios.postForm("like/CUD", { episodeId: this.currentEpisode.id, likeOrDislike: param })).data
         },
         changeLabel(e, src) {
             $(".tabs_label > label").removeClass("focus");
@@ -147,7 +147,7 @@ export default {
         async refreshModel() {
             this.content = (await axios.get(`Content/Get/${this.$route.params.id}`)).data;
             this.currentEpisode = this.$route.params.episodeId ? this.content.episodeList.filter(x => x.id == this.$route.params.episodeId)[0] : this.content.episodeList[0];
-            this.likeOrDislike=(await axios.get("like/get?episodeId="+this.currentEpisode.id)).data
+            this.likeOrDislike = (await axios.get("like/get?episodeId=" + this.currentEpisode.id)).data
             this.comments = [];
             (await axios.get(`Comment/getlist?episodeId=${this.currentEpisode.id}`)).data.forEach(x => {
                 this.comments.push(new Comment(x));
@@ -155,6 +155,9 @@ export default {
             this.currentComment.episodeId = this.currentEpisode.id;
             if (this.USER != null) {
                 this.currentComment.imageLink = this.USER.imageLink;
+            }
+            if (this.currentEpisode?.id) {
+                axios.get("content/watch/" + this.currentEpisode.id)
             }
         },
         async sendComment() {
@@ -167,11 +170,11 @@ export default {
     created() {
         this.refreshModel();
     },
-    mounted(){
+    mounted() {
         this.resizeEpisodeNode();
     },
-    unmounted(){
-        window.onresize=null;
+    unmounted() {
+        window.onresize = null;
     },
     watch: {
         $route(from, to) {
@@ -192,9 +195,11 @@ export default {
 .parentof_btn_like_dislike>button {
     padding-inline: 8px;
 }
-.parentof_btn_like_dislike>button:where(:hover, .active){
+
+.parentof_btn_like_dislike>button:where(:hover, .active) {
     color: var(--pri-btn-color);
 }
+
 .parentof_btn_like_dislike>button:first-child {
     border-right: 1px solid var(--pri-border-color);
 }

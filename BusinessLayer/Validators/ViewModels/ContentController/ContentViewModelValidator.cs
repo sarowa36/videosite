@@ -27,7 +27,7 @@ namespace BusinessLayer.Validators.ViewModels.ContentController
             RuleFor(x => x.Name).NotEmpty().MinimumLength(2);
             RuleFor(x => x.Description).NotEmpty().MinimumLength(2);
             RuleFor(x => x.EpisodeList).Must(x => x.Count > 0);
-            RuleForEach(x => x.EpisodeList).SetValidator(x => new ContentViewModelEpisodeListValidator());
+            RuleForEach(x => x.EpisodeList).SetValidator(x => new ContentViewModelEpisodeListValidator(en));
         }
     }
     internal class ContentViewModelEpisodeListValidator : AbstractValidator<Episode>
@@ -40,7 +40,7 @@ namespace BusinessLayer.Validators.ViewModels.ContentController
                 RuleFor(x=>x.ContentId).NotNull().Must(x => x > 0);
             }
             RuleFor(x=>x.Name).NotNull().NotEmpty().MinimumLength(2);
-            RuleForEach(x => x.SourceList).SetValidator(x => new ContentViewModelEpisodeListSourceListValidator());
+            RuleForEach(x => x.SourceList).SetValidator(x => new ContentViewModelEpisodeListSourceListValidator(en));
         }
     }
     internal class ContentViewModelEpisodeListSourceListValidator : AbstractValidator<SourceOfIframe>

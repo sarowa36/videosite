@@ -15,15 +15,6 @@ namespace ToolsLayer.FileManagement
 {
     public static class SaveFile
     {
-        public static async Task<string> SaveFileAsync<T>(this T Entity, string SaveLocation, Expression<Func<T,string>> entityProp, Expression<Func<T, IFormFile>> expres) where T : class 
-        {
-            IFormFile file = expres.Compile().Invoke(Entity);
-            MemberExpression outerMember = (MemberExpression)entityProp.Body;
-            PropertyInfo outerProp = (PropertyInfo)outerMember.Member;
-            string insavedlocation = await file.SaveFileAsync(SaveLocation);
-            outerProp.SetValue(Entity, insavedlocation);
-            return insavedlocation;
-        }
         public static async Task<string> SaveFileAsync(this IFormFile file, string SaveLocation)
         {
             if (file != null && file.Length > 2 && SaveLocation.Length > 4)

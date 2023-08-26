@@ -5,9 +5,12 @@ using EntityLayer.Models.M2MRelationships;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using EntityLayer.ViewModels.UserController;
+using Microsoft.AspNetCore.Authorization;
+using EntityLayer;
 
 namespace VideoSite.Controllers
 {
+    [Authorize(Roles =UserRoles.AdminMaster)]
     public class UserController : Controller
     {
         private readonly ADC db;

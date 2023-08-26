@@ -4,6 +4,7 @@ using EntityLayer.Models.Identity;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using VideoSite;
@@ -15,7 +16,7 @@ using VideoSite.Subscription.Middleware;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddMvc().AddFluentValidation(x=>x.RegisterValidatorsFromAssemblyContaining<BusinessLayer.AssemblyMarkUp>()).AddNewtonsoftJson(x =>
+builder.Services.AddMvc().AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<BusinessLayer.AssemblyMarkUp>()).AddNewtonsoftJson(x =>
 {
     x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
     x.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
@@ -71,7 +72,7 @@ app.UseEndpoints(endpoint =>
 {
     endpoint.MapHub<VerifyEmailHub>("hub/verifyEmail");
     endpoint.MapHub<MessageHub>("hub/Message");
-    endpoint.MapControllerRoute(name: "default", pattern: "api/{controller=Home}/{action=Index}/{id?}");
+    endpoint.MapControllerRoute(name: "default", pattern: "api/{controller}/{action=Index}/{id?}");
 });
 app.UseSpaStaticFiles();
 app.UseSpa(x =>
