@@ -23,7 +23,7 @@ import "jquery-ui/dist/themes/ui-darkness/jquery-ui.min.css"
    //axios.defaults.baseURL="https://localhost:7292/api/";
    app.config.globalProperties.API_URL=location.origin+"/";
    axios.defaults.baseURL=location.origin+"/api/";
-   
+   axios.defaults.validateStatus=(status)=>status>=200 && status<=500
    var user=(await axios.get("identity/getuser")).data;
    app.config.globalProperties.USER=user;
    app.config.globalProperties.isAdmin=()=>{

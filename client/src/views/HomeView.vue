@@ -169,7 +169,10 @@ export default {
     },
     async getData() {
       var postData = JSON.parse(JSON.stringify(this.filter));
-      var { data } = (await axios.get("content/getlist", { params: this.filter }));
+      if(postData.release=="Hepsi"){
+        delete postData.release
+      }
+      var { data } = (await axios.get("content/getlist", { params: postData }));
       data.forEach(element => {
         this.contents.push(new Content(element));
       });

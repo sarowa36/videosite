@@ -2,6 +2,7 @@ using DataAccessLayer;
 using EntityLayer.Models.Contents;
 using EntityLayer.Models.Identity;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -13,73 +14,100 @@ using VideoSite.Subscription;
 using VideoSite.Subscription.Base;
 using VideoSite.Subscription.Middleware;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddMvc().AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<BusinessLayer.AssemblyMarkUp>()).AddNewtonsoftJson(x =>
+namespace VideoSite
 {
-    x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-    x.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-    x.SerializerSettings.Converters.Add(new StringEnumConverter());
-});
-builder.Services.AddSignalR();
-builder.Services.AddDbContext<ADC>(x =>
-{
-    x.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
-});
-
-
-builder.Services.AddDefaultIdentity<ApplicationUser>()
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ADC>()
-    .AddErrorDescriber<CustomIdentityErrorDescriber>()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddCors();
-
-builder.Services.AddSpaStaticFiles(x =>
-{
-    x.RootPath = "dist";
-});
-
-builder.Services.AddSingleton<MessageDatabaseSubscription>();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-
-app.UseCors(x =>
-{
-    x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
-});
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseAuthentication();
-app.UseAuthorization();
-app.UseDatabaseSubscription<MessageDatabaseSubscription>();
-
-app.UseEndpoints(endpoint =>
-{
-    endpoint.MapHub<VerifyEmailHub>("hub/verifyEmail");
-    endpoint.MapHub<MessageHub>("hub/Message");
-    endpoint.MapControllerRoute(name: "default", pattern: "api/{controller}/{action=Index}/{id?}");
-});
-app.UseSpaStaticFiles();
-app.UseSpa(x =>
-{
-    if (app.Environment.IsDevelopment())
+    public class Program
     {
-        x.UseProxyToSpaDevelopmentServer("http://localhost:5173/");
+        public static IConfiguration Configuration { get; set; }
+        public static bool IsInUnitTest
+        {
+            get
+            {
+                var a = Environment.GetEnvironmentVariable("IsInUnitTest");
+                return a != null && int.Parse(a) == 1;
+            }
+        }
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+            Configuration = builder.Configuration;
+            ConfigureServices(builder.Services);
+            var app = builder.Build();
+            Configure(app, app.Environment);
+            app.Run();
+        }
+        public static void ConfigureServices(IServiceCollection services)
+        {
+            // Add services to the container.
+            services.AddMvc().AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<BusinessLayer.AssemblyMarkUp>()).AddNewtonsoftJson(x =>
+            {
+                x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                x.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                x.SerializerSettings.Converters.Add(new StringEnumConverter());
+            });
+            services.AddSignalR();
+            services.AddDbContext<ADC>(x =>
+            {
+                if (!IsInUnitTest)
+                    x.UseSqlServer(Configuration.GetConnectionString("Default"));
+            });
+
+
+            services.AddDefaultIdentity<ApplicationUser>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ADC>()
+                .AddErrorDescriber<CustomIdentityErrorDescriber>()
+                .AddDefaultTokenProviders();
+
+            services.AddCors();
+
+            services.AddSpaStaticFiles(x =>
+            {
+                x.RootPath = "dist";
+            });
+
+            services.AddSingleton<MessageDatabaseSubscription>();
+        }
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            // Configure the HTTP request pipeline.
+            if (!env.IsDevelopment())
+            {
+                app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+
+            app.UseCors(x =>
+            {
+                x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+            });
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseDatabaseSubscription<MessageDatabaseSubscription>();
+
+            app.UseEndpoints(endpoint =>
+            {
+                endpoint.MapHub<VerifyEmailHub>("hub/verifyEmail");
+                endpoint.MapHub<MessageHub>("hub/Message");
+                endpoint.MapControllerRoute(name: "default", pattern: "api/{controller}/{action=Index}/{id?}");
+            });
+            app.UseSpaStaticFiles();
+            if (!IsInUnitTest)
+                app.UseSpa(x =>
+                {
+                    if (env.IsDevelopment())
+                    {
+                        x.UseProxyToSpaDevelopmentServer("http://localhost:5173/");
+                    }
+                });
+
+        }
     }
-});
-app.Run();
+}

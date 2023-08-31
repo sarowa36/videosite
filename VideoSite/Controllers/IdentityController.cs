@@ -12,6 +12,7 @@ using VideoSite.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using VideoSite.InMemoryData;
 using DataAccessLayer.Helpers;
+using EntityLayer;
 
 namespace VideoSite.Controllers
 {
@@ -30,7 +31,32 @@ namespace VideoSite.Controllers
             this.db = db;
             this.verifyEmailHub = verifyEmailHub;
         }
-        
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = model.AsApplicationUser();
+                user.ImageLink = await model.ProfileImage.SaveFileAsync(Path.Combine("content", "profile"));
+
+                if (model.Categories != null && model.Categories.Count > 0)
+                    user.UserM2MCategory.AddRange(model.Categories.Select(x => new UserM2MCategory() { CategoryId = x }));
+                var result = await userManager.CreateAsync(user);
+                if (result.Succeeded)
+                {
+                    if (!await roleManager.RoleExistsAsync(UserRoles.User))
+                        await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+                    await userManager.AddToRoleAsync(user, UserRoles.User);
+                    await signmanager.SignInAsync(user, true);
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(new { modelOnly = result.Errors.Select(x => x.Description) });
+                }
+            }
+            return BadRequest(ModelState.ListInvalidValueErrors());
+        }
         /*
          For quick test 
          public async Task<IActionResult> d()
@@ -49,7 +75,7 @@ namespace VideoSite.Controllers
                         (await userManager.GetRolesAsync(user)).ToList()
                       )
                     );
-            return Ok();
+            return BadRequest();
         }
 
         [HttpPost]
@@ -58,35 +84,14 @@ namespace VideoSite.Controllers
             if (ModelState.IsValid)
             {
                 var result = await signmanager.PasswordSignInAsync(userName: model.UserName, password: model.Password, isPersistent: true, false);
-                if(result.Succeeded)
-                return Ok(result);
+                if (result.Succeeded)
+                    return Ok(result);
                 else
-                    return Ok(new {modelOnly=new List<string>() {"Kullanıcı Adı Yada Şifre Geçersiz" } });
+                    return BadRequest(new { modelOnly = new List<string>() { "Kullanıcı Adı Yada Şifre Geçersiz" } });
             }
-            return Ok(ModelState.ListInvalidValueErrors());
+            return BadRequest(ModelState.ListInvalidValueErrors());
         }
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = model.AsApplicationUser();
-                user.ImageLink = await model.ProfileImage.SaveFileAsync(Path.Combine("content", "profile"));
-               
-                model.Categories.ForEach(x => user.UserM2MCategory.Add(new EntityLayer.Models.M2MRelationships.UserM2MCategory() { CategoryId = x }));
-                var result = await userManager.CreateAsync(user);
-                if (result.Succeeded) { 
-                await userManager.AddToRoleAsync(user, "USER");
-                await signmanager.SignInAsync(user, true);
-                return Ok(result);
-                }
-                else
-                {
-                    return Ok(new { modelOnly = result.Errors.Select(x => x.Description) });
-                }
-            }
-            return Ok(ModelState.ListInvalidValueErrors());
-        }
+       
         public async Task<IActionResult> Logout()
         {
             await signmanager.SignOutAsync();
@@ -94,15 +99,13 @@ namespace VideoSite.Controllers
         }
         public async Task<IActionResult> ProfileEdit()
         {
-            var a = User.Identity.Name;
-            var user = db.Users.AsQueryable().Include(x => x.UserM2MCategory).ThenInclude(x => x.Category).FirstOrDefault(x => x.UserName == a);
+            var user = db.Users.AsQueryable().Include(x => x.UserM2MCategory).ThenInclude(x => x.Category).FirstOrDefault(x => x.UserName == User.Identity.Name);
             return Ok(new ProfileEditViewModel() { Categories = user.UserM2MCategory.Select(x => x.CategoryId).ToList(), ImageLink = user.ImageLink });
         }
         [HttpPost]
         public async Task<IActionResult> ProfileEdit(ProfileEditViewModel model)
         {
-            var a = User.Identity.Name;
-            var user = db.Users.AsQueryable().Include(x => x.UserM2MCategory).FirstOrDefault(x => x.UserName == a);
+            var user = db.Users.AsQueryable().Include(x => x.UserM2MCategory).FirstOrDefault(x => x.UserName == User.Identity.Name);
             if (model.ProfileImage != null)
                 user.ImageLink = await model.ProfileImage.SaveFileAsync(Path.Combine("content", "profile"));
             user.UserM2MCategory.Select(x => x.CategoryId).ToList().RemoveBeforeAddNew(model.Categories,
@@ -144,7 +147,7 @@ namespace VideoSite.Controllers
             var userTokenSource = UserTokenSource.UserTokenViewModels.Find(x => x.Token == token);
             if (userTokenSource != null)
             {
-                await verifyEmailHub.Clients.Client(userTokenSource.ClientId).SendAsync("emailVerified",userTokenSource.Token);
+                await verifyEmailHub.Clients.Client(userTokenSource.ClientId).SendAsync("emailVerified", userTokenSource.Token);
             }
             return Ok();
         }
@@ -155,9 +158,11 @@ namespace VideoSite.Controllers
             if (ModelState.IsValid && user != null)
             {
                 var result = await userManager.ResetPasswordAsync(user.User, model.Token, model.Password);
-                if (result.Succeeded) {
+                if (result.Succeeded)
+                {
                     UserTokenSource.UserTokenViewModels.Remove(UserTokenSource.UserTokenViewModels.Find(x => x.User.Id == user.User.Id));
-                    return Ok(new { succeeded = true }); }
+                    return Ok(new { succeeded = true });
+                }
                 else
                 {
                     return Ok(new { modelOnly = result.Errors.Select(x => x.Description) });
@@ -168,7 +173,7 @@ namespace VideoSite.Controllers
         [HttpPost]
         public async Task<IActionResult> VerifyEmail(string guid)
         {
-            var val= EmailVertificationWaitingClientsSource.EmailVertificationWaitingClientsViewModel.Find(x=>x.Guid== guid);
+            var val = EmailVertificationWaitingClientsSource.EmailVertificationWaitingClientsViewModel.Find(x => x.Guid == guid);
             if (val != null)
             {
                 await verifyEmailHub.Clients.Client(val.ClientId).SendAsync("emailAccepted");
@@ -176,9 +181,10 @@ namespace VideoSite.Controllers
                 return Ok(new { succeeded = true });
             }
             else
-                return Ok(new {succeeded=false});
+                return Ok(new { succeeded = false });
         }
         #region helpers
+        [NonAction]
         private async Task<ApplicationUser?> GetCurrentUserAsync() => await userManager.GetUserAsync(HttpContext.User);
         #endregion
     }

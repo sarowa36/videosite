@@ -54,9 +54,18 @@ namespace DataAccessLayer
            db.Set<T>().Add(t);
             return SaveChanges();
         }
-        public virtual T Get(int id)
+        public virtual T? Get(int id)
         {
             return db.Set<T>().Find(id);
+        }
+        public virtual bool Get(int id, out T? t)
+        {
+            t = this.Get(id);
+            return t != null;
+        }
+        public virtual bool Exist(int id)
+        {
+            return db.Set<T>().Any(x=> x.Id == id);
         }
         public virtual T Get(int id,IQueryable<T> filter)
         {

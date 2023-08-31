@@ -2,6 +2,10 @@
 using DataAccessLayer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using EntityLayer.Models.Contents;
+using EntityLayer.ViewModels.CategoryController;
+using BusinessLayer.Validators.ViewModels.CategoryController;
+using VideoSite.Helpers;
 
 namespace VideoSite.Controllers
 {
@@ -21,21 +25,32 @@ namespace VideoSite.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(string CategoryName)
         {
-            r.Create(new EntityLayer.Models.Contents.Category() { Name= CategoryName });
-            return Ok();
+            if (!string.IsNullOrWhiteSpace(CategoryName))
+            {
+                string? error = r.Create(new EntityLayer.Models.Contents.Category() { Name = CategoryName });
+                if (string.IsNullOrWhiteSpace(error))
+                    return Ok();
+            }
+            return BadRequest();
         }
         public async Task<IActionResult> Update(int id)
         {
-            return Ok(r.Get(id));
+            if (r.Get(id, out Category data))
+                return Ok(new CategoryUpdateViewModel(data));
+            return BadRequest();
         }
         [HttpPost]
-        public async Task<IActionResult> Update(int id,string value)
+        public async Task<IActionResult> Update(CategoryUpdateViewModel model)
         {
-            var a = r.Get(id);
-            a.Name= value;
-            r.Update(a);
-            return Ok();
+            var validateResult = new CategoryUpdateViewModelValidator().Validate(model);
+            if (validateResult.IsValid)
+            {
+                var error = r.Update(model.AsCategory());
+                return error == null ? Ok() : BadRequest();
+            }
+            return BadRequest(validateResult.ListInvalidValueErrors());
         }
+
         public async Task<IActionResult> Delete(int id)
         {
             r.Delete(id);

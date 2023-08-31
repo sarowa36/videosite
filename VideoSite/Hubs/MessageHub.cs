@@ -7,7 +7,7 @@ using EntityLayer.ViewModels.MessageHub;
 
 namespace VideoSite.Hubs
 {
-    public class MessageHub : Hub
+    public class MessageHub :Hub
     {
         public static Dictionary<string, ApplicationUser> ClientIdApplicationUserList { get; } = new Dictionary<string, ApplicationUser>();
         private readonly ADC _db;

@@ -13,97 +13,122 @@ using BusinessLayer.Validators.ViewModels.ContentController;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using EntityLayer.Models.Identity;
+using DataAccessLayer.ParamaterPass;
+using System.ComponentModel.DataAnnotations;
 
 namespace VideoSite.Controllers
 {
     public class ContentController : Controller
     {
-        public readonly ADC db;
+        public readonly ADC _db;
         public readonly ContentRepository r;
         public readonly UserManager<ApplicationUser> userManager;
         public ContentController(ADC db, UserManager<ApplicationUser> userManager)
         {
-            this.db = db;
-            r = new ContentRepository(this.db);
+            this._db = db;
+            r = new ContentRepository(this._db);
             this.userManager = userManager;
         }
         public async Task<IActionResult> GetList(ContentGetListRequestViewModel index)
         {
-            return Json(r.GetAll());
+            if (ModelState.IsValid)
+                return Json(r.GetAll());
+            else
+                return BadRequest(ModelState);
         }
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> Get([Range(0, int.MaxValue), Required] int? id)
         {
-            return Json(new ContentGetViewModel(r.Get(id, db.Content.Include(x => x.ContentM2MCategories).ThenInclude(x => x.Category).Include(x => x.EpisodeList).ThenInclude(x => x.SourceList))));
+            if (ModelState.IsValid)
+            {
+                var entity = r.Get((int)id);
+                if (entity != null)
+                {
+                    return Json(new ContentGetViewModel(entity));
+                }
+                return NotFound();
+            }
+            else
+                return BadRequest(ModelState);
         }
-        public async Task<IActionResult> Watch(int id)
-        {
 
-            r.Counter(id,
-                HttpContext.GetIp(),
-                (await userManager.GetUserAsync(HttpContext.User))?.Id);
-            return Ok();
+        /// <summary>
+        /// Thats action add a view count to episode if not added
+        /// </summary>
+        /// <param name="id">Episode Id</param>
+        /// <returns>Ok or BadRequest</returns>
+        public async Task<IActionResult> Watch([Range(0, int.MaxValue), Required] int? id)
+        {
+            if (ModelState.IsValid)
+            {
+                var error = r.Counter((int)id,
+                      HttpContext.GetIp(),
+                      (await userManager.GetUserAsync(HttpContext.User))?.Id);
+                if (error != null)
+                    return BadRequest(new { error = error });
+                return Ok();
+            }
+            return BadRequest(ModelState);
         }
         [HttpPost]
         public async Task<IActionResult> Create(ContentViewModel model)
         {
-            var v = new ContentViewModelValidator();
-            var validateResult = v.Validate(model);
+            var validateResult = new ContentViewModelValidator().Validate(model);
             if (validateResult.IsValid)
             {
                 if (model.File != null && model.File.Length > 2)
-                     model.ImageLink=await model.File.SaveFileAsync(Path.Combine("content", "poster"));
+                    model.ImageLink = await model.File.SaveFileAsync(Path.Combine("content", "poster"));
                 var content = model.AsContent();
                 model.Categories.ForEach(x => content.ContentM2MCategories.Add(new ContentM2MCategory() { CategoryId = x }));
-                r.Create(content);
+                var error = r.Create(content);
+                if (error != null)
+                    return BadRequest(new { error });
                 return Ok(new { succeeded = true });
             }
             else
             {
-                return Ok(validateResult.ListInvalidValueErrors());
+                return BadRequest(validateResult.ListInvalidValueErrors());
             }
         }
         [HttpGet]
-        public async Task<IActionResult> Update(int id)
+        public async Task<IActionResult> Update([Range(0, int.MaxValue), Required] int? id)
         {
-            return Json(new ContentViewModel(r.Get(id, db.Content.Include(x => x.ContentM2MCategories).Include(x => x.EpisodeList).ThenInclude(x => x.SourceList))));
+            if (ModelState.IsValid)
+            {
+                var val = r.Get((int)id);
+                if (val != null)
+                    return Json(new ContentViewModel(val));
+                else
+                    return NotFound();
+            }
+            else return BadRequest(ModelState);
         }
         [HttpPost]
         public async Task<IActionResult> Update(ContentViewModel model)
         {
-            var validationResult = (new ContentViewModelValidator(EntityLayer.Enums.CrudMethodEnum.Update)).Validate(model);
+            var validationResult = new ContentViewModelValidator(EntityLayer.Enums.CrudMethodEnum.Update).Validate(model);
             if (validationResult.IsValid)
             {
                 if (model.File != null && model.File.Length > 2)
-                     model.ImageLink= await model.File.SaveFileAsync(Path.Combine("content", "poster"));
-                var beforeList = db.ContentM2MCategories.Where(x => x.ContentId == model.Id).Select(x => x.CategoryId).ToList();
-                var newList = model.Categories;
-                var removeList = beforeList.Except(newList);
-                var addlist = newList.Except(beforeList);
-                var content = model.AsContent();
-                if (addlist != null && addlist.Count() > 0)
-                {
-                    addlist.ToList().ForEach(x =>
-                    content.ContentM2MCategories.Add(new ContentM2MCategory() { CategoryId = x })
-                    );
-                }
-                if (removeList != null && removeList.Count() > 0)
-                {
-                    removeList.ToList().ForEach(x =>
-                   db.ContentM2MCategories.Remove(db.ContentM2MCategories.FirstOrDefault(y => y.ContentId == model.Id && y.CategoryId == x))
-                    );
-                }
-                r.Update(content);
+                    model.ImageLink = await model.File.SaveFileAsync(Path.Combine("content", "poster"));
+                var error = r.Update(model.AsContent(), new ContentParamaterPass() { RequestCategoryIds = model.Categories });
+                if (error != null)
+                    return BadRequest(new { error });
                 return Json(new { succeeded = true });
             }
             else
             {
-                return Ok(validationResult.ListInvalidValueErrors());
+                return BadRequest(validationResult.ListInvalidValueErrors());
             }
         }
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([Range(0, int.MaxValue), Required] int? id)
         {
-            r.Delete(id);
-            return Ok();
+            if (ModelState.IsValid)
+            {
+                var error = r.Delete((int)id);
+                if (error != null) return BadRequest(new { error });
+                return Ok();
+            }
+            return BadRequest(ModelState);
         }
     }
 
