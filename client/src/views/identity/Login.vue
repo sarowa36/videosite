@@ -49,10 +49,10 @@ export default {
     methods:{
         async sendData(){
             var d={userName:this.userName, password:this.password};
-            const {data} =await axios.postForm("identity/login",d,{
+            const {data, status} =await axios.postForm("identity/login",d,{
                 withCredentials:true
             });
-            if(data.succeeded){
+            if(status==200){
                 location.pathname="/";
             }
             else{

@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using EntityLayer.ViewModels.LikeController;
+using BusinessLayer.Validators.ViewModels.LikeController;
+using VideoSite.Helpers;
 
 namespace VideoSite.Controllers
 {
-    [Authorize(Roles ="USER")]
+    [Authorize(Roles = "USER")]
     public class LikeController : Controller
     {
         private readonly ADC db;
@@ -33,7 +35,7 @@ namespace VideoSite.Controllers
             }
             else
             {
-                return Ok();
+                return BadRequest();
             }
         }
         /// <summary>
@@ -42,21 +44,26 @@ namespace VideoSite.Controllers
         /// <returns>Like Dislike Counts</returns>
         public async Task<IActionResult> CUD(LikeAddViewModel model)
         {
+            var modelState = new LikeAddViewModelValidator().Validate(model);
             var AppUser = await userManager.GetUserAsync(HttpContext.User);
-            var val = db.UserM2MLike.FirstOrDefault(x => x.UserId == AppUser.Id && x.EpisodeId == model.EpisodeId);
-            if (val != null)
+            if (AppUser != null && modelState.IsValid)
             {
-                if (val.LikeDislike != model.LikeOrDislike)
-                    val.LikeDislike = model.LikeOrDislike;
+                var val = db.UserM2MLike.FirstOrDefault(x => x.UserId == AppUser.Id && x.EpisodeId == model.EpisodeId);
+                if (val != null)
+                {
+                    if (val.LikeDislike != model.LikeOrDislike)
+                        val.LikeDislike = model.LikeOrDislike;
+                    else
+                        db.UserM2MLike.Remove(val);
+                }
                 else
-                    db.UserM2MLike.Remove(val);
+                {
+                    db.UserM2MLike.Add(new EntityLayer.Models.M2MRelationships.UserM2MLike() { EpisodeId = model.EpisodeId, UserId = AppUser.Id, LikeDislike = model.LikeOrDislike });
+                }
+                db.SaveChanges();
+                return await Get(model.EpisodeId);
             }
-            else
-            {
-                db.UserM2MLike.Add(new EntityLayer.Models.M2MRelationships.UserM2MLike() { EpisodeId = model.EpisodeId, UserId = AppUser.Id, LikeDislike = model.LikeOrDislike });
-            }
-            db.SaveChanges();
-            return await Get(model.EpisodeId);
+            return BadRequest(modelState.ListInvalidValueErrors());
         }
     }
 }

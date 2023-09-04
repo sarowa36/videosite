@@ -137,14 +137,20 @@ export default {
         }
     },
     async created() {
-        this.allCategories = (await axios.get("category/getlist")).data;
+        var req=await axios.get("category/getlist");
+        if(req.status==200){
+        this.allCategories = req.data;
+    }
         if (this.$route.params.method.toLowerCase() == "update" && this.$route.params.id) {
             this.fetchData(this.$route.params.id)
         }
     },
     methods: {
         async fetchData(id) {
-            this.content = (await axios.get("content/update/" + this.$route.params.id)).data
+            var req=await axios.get("content/update/" + this.$route.params.id);
+            if(req.status==200){
+            this.content = req.data
+        }
         },
         selectVal(event, val, className) {
             if (!this.errors.selected) {
@@ -211,12 +217,12 @@ export default {
         async sendRequest() {
             var data = JSON.parse(JSON.stringify(this.content));
             data.file = document.querySelector("#poster").files[0]
-            var result = (await axios.postForm("content/" + this.$route.params.method, data)).data;
-            if (result.succeeded) {
+            var result = (await axios.postForm("content/" + this.$route.params.method, data));
+            if (result.status==200) {
                 router.go(-1)
             }
             else {
-                this.errors = result;
+                this.errors = result.data;
             }
         }
     },

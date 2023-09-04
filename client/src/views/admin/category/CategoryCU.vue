@@ -17,20 +17,28 @@ export default {
 data(){
     return{
         id:0,
-        categoryName:""
+        categoryName:"",
+        errors
     }
 },
 async mounted(){
     if(this.$route.params.method.toLowerCase() == "update"){
-var {data}=(await axios.get("category/update/"+this.$route.params.id));
+var {data,status}=(await axios.get("category/update/"+this.$route.params.id));
+if(status==200){
 this.id=data.id;
 this.categoryName=data.name;
+}
 }
 },
 methods:{
     async sendRequest(){
-        await axios.postForm("category/"+this.$route.params.method ,this.$data);
+       var {data,status}= await axios.postForm("category/"+this.$route.params.method ,this.$data);
+       if(status==200){
         router.go(-1)
+        }
+        else{
+            this.errors=data;
+        }
     }
 }
 }

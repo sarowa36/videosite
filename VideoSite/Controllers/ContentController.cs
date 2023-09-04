@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 using EntityLayer.Models.Identity;
 using DataAccessLayer.ParamaterPass;
 using System.ComponentModel.DataAnnotations;
+using FluentValidation;
 
 namespace VideoSite.Controllers
 {
@@ -29,19 +30,20 @@ namespace VideoSite.Controllers
             r = new ContentRepository(this._db);
             this.userManager = userManager;
         }
-        public async Task<IActionResult> GetList(ContentGetListRequestViewModel index)
+        public async Task<IActionResult> GetList(ContentGetListFilterViewModel model)
         {
-            if (ModelState.IsValid)
-                return Json(r.GetAll());
+            var modelState = new ContentGetListFilterViewModelValidator().Validate(model);
+
+            if (modelState.IsValid)
+                return Ok(r.GetAll());
             else
-                return BadRequest(ModelState);
+                return BadRequest(modelState.ListInvalidValueErrors());
         }
         public async Task<IActionResult> Get([Range(0, int.MaxValue), Required] int? id)
         {
             if (ModelState.IsValid)
             {
-                var entity = r.Get((int)id);
-                if (entity != null)
+                if (r.Get((int)id,out Content entity))
                 {
                     return Json(new ContentGetViewModel(entity));
                 }
@@ -64,7 +66,7 @@ namespace VideoSite.Controllers
                       HttpContext.GetIp(),
                       (await userManager.GetUserAsync(HttpContext.User))?.Id);
                 if (error != null)
-                    return BadRequest(new { error = error });
+                    return BadRequest();
                 return Ok();
             }
             return BadRequest(ModelState);
@@ -81,8 +83,8 @@ namespace VideoSite.Controllers
                 model.Categories.ForEach(x => content.ContentM2MCategories.Add(new ContentM2MCategory() { CategoryId = x }));
                 var error = r.Create(content);
                 if (error != null)
-                    return BadRequest(new { error });
-                return Ok(new { succeeded = true });
+                    return BadRequest();
+                return Ok();
             }
             else
             {
@@ -94,9 +96,8 @@ namespace VideoSite.Controllers
         {
             if (ModelState.IsValid)
             {
-                var val = r.Get((int)id);
-                if (val != null)
-                    return Json(new ContentViewModel(val));
+                if (r.Get((int)id,out Content val))
+                    return Ok(new ContentViewModel(val));
                 else
                     return NotFound();
             }
@@ -111,9 +112,9 @@ namespace VideoSite.Controllers
                 if (model.File != null && model.File.Length > 2)
                     model.ImageLink = await model.File.SaveFileAsync(Path.Combine("content", "poster"));
                 var error = r.Update(model.AsContent(), new ContentParamaterPass() { RequestCategoryIds = model.Categories });
-                if (error != null)
-                    return BadRequest(new { error });
-                return Json(new { succeeded = true });
+                if (!string.IsNullOrWhiteSpace(error))
+                    return BadRequest();
+                return Ok();
             }
             else
             {
@@ -125,7 +126,7 @@ namespace VideoSite.Controllers
             if (ModelState.IsValid)
             {
                 var error = r.Delete((int)id);
-                if (error != null) return BadRequest(new { error });
+                if (error != null) return BadRequest();
                 return Ok();
             }
             return BadRequest(ModelState);

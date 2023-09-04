@@ -11,8 +11,9 @@ using VideoSite.Helpers;
 using VideoSite.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using VideoSite.InMemoryData;
-using DataAccessLayer.Helpers;
+using ToolsLayer.List;
 using EntityLayer;
+using BusinessLayer.Validators.ViewModels.IdentityController;
 
 namespace VideoSite.Controllers
 {
@@ -34,7 +35,8 @@ namespace VideoSite.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+            var validationResult = new RegisterViewModelValidator().Validate(model);
+            if (validationResult.IsValid)
             {
                 var user = model.AsApplicationUser();
                 user.ImageLink = await model.ProfileImage.SaveFileAsync(Path.Combine("content", "profile"));
@@ -55,7 +57,7 @@ namespace VideoSite.Controllers
                     return BadRequest(new { modelOnly = result.Errors.Select(x => x.Description) });
                 }
             }
-            return BadRequest(ModelState.ListInvalidValueErrors());
+            return BadRequest(validationResult.ListInvalidValueErrors());
         }
         /*
          For quick test 
@@ -81,7 +83,8 @@ namespace VideoSite.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (ModelState.IsValid)
+            var modelState = new LoginViewModelValidator().Validate(model);
+            if (modelState.IsValid)
             {
                 var result = await signmanager.PasswordSignInAsync(userName: model.UserName, password: model.Password, isPersistent: true, false);
                 if (result.Succeeded)
@@ -89,9 +92,9 @@ namespace VideoSite.Controllers
                 else
                     return BadRequest(new { modelOnly = new List<string>() { "Kullanıcı Adı Yada Şifre Geçersiz" } });
             }
-            return BadRequest(ModelState.ListInvalidValueErrors());
+            return BadRequest(modelState.ListInvalidValueErrors());
         }
-       
+
         public async Task<IActionResult> Logout()
         {
             await signmanager.SignOutAsync();
@@ -105,25 +108,33 @@ namespace VideoSite.Controllers
         [HttpPost]
         public async Task<IActionResult> ProfileEdit(ProfileEditViewModel model)
         {
-            var user = db.Users.AsQueryable().Include(x => x.UserM2MCategory).FirstOrDefault(x => x.UserName == User.Identity.Name);
-            if (model.ProfileImage != null)
-                user.ImageLink = await model.ProfileImage.SaveFileAsync(Path.Combine("content", "profile"));
-            user.UserM2MCategory.Select(x => x.CategoryId).ToList().RemoveBeforeAddNew(model.Categories,
-                (IEnumerable<int> remove) =>
-                {
-                    db.UserM2MCategories.RemoveRange(db.UserM2MCategories.Where(x => x.UserId == user.Id && remove.Contains(x.CategoryId)));
-                },
-                (IEnumerable<int> addlist) =>
-                {
-                    db.UserM2MCategories.AddRange(addlist.Select(x => new UserM2MCategory() { CategoryId = x, UserId = user.Id }));
-                });
-            db.SaveChanges();
-            return Ok();
+            var modelState = new ProfileEditViewModelValidator().Validate(model);
+            if (modelState.IsValid)
+            {
+                var user = db.Users.AsQueryable().Include(x => x.UserM2MCategory).FirstOrDefault(x => x.UserName == User.Identity.Name);
+                if (model.ProfileImage != null)
+                    user.ImageLink = await model.ProfileImage.SaveFileAsync(Path.Combine("content", "profile"));
+                //Changin Favoruite Categories
+                user.UserM2MCategory.Select(x => x.CategoryId).ToList().RemoveBeforeAddNew(model.Categories,
+                    (IEnumerable<int> remove) =>
+                    {
+                        db.UserM2MCategories.RemoveRange(db.UserM2MCategories.Where(x => x.UserId == user.Id && remove.Contains(x.CategoryId)));
+                    },
+                    (IEnumerable<int> addlist) =>
+                    {
+                        db.UserM2MCategories.AddRange(addlist.Select(x => new UserM2MCategory() { CategoryId = x, UserId = user.Id }));
+                    });
+
+                db.SaveChanges();
+                return Ok();
+            }
+            return BadRequest(modelState.ListInvalidValueErrors());
         }
         [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
-            if (ModelState.IsValid)
+            var modelState = new ChangePasswordViewModelValidator().Validate(model);
+            if (modelState.IsValid)
             {
                 var user = await GetCurrentUserAsync();
                 var result = await userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
@@ -133,13 +144,10 @@ namespace VideoSite.Controllers
                 }
                 else
                 {
-                    return Ok(new { modelOnly = result.Errors.Select(x => x.Description).ToList() });
+                    return BadRequest(new { modelOnly = result.Errors.Select(x => x.Description).ToList() });
                 }
             }
-            else
-            {
-                return Ok(ModelState.ListInvalidValueErrors());
-            }
+            return BadRequest(modelState.ListInvalidValueErrors());
         }
         [HttpPost]
         public async Task<IActionResult> ForgotPasswordToken(string token)
@@ -155,7 +163,8 @@ namespace VideoSite.Controllers
         public async Task<IActionResult> RefreshPassword(RefreshPasswordModel model)
         {
             var user = UserTokenSource.UserTokenViewModels.Find(x => x.Token == model.Token);
-            if (ModelState.IsValid && user != null)
+            var modelState = new RefreshPasswordModelValidator().Validate(model);
+            if (modelState.IsValid && user != null)
             {
                 var result = await userManager.ResetPasswordAsync(user.User, model.Token, model.Password);
                 if (result.Succeeded)
@@ -165,10 +174,10 @@ namespace VideoSite.Controllers
                 }
                 else
                 {
-                    return Ok(new { modelOnly = result.Errors.Select(x => x.Description) });
+                    return BadRequest(new { modelOnly = result.Errors.Select(x => x.Description) });
                 }
             }
-            return Ok(ModelState.ListInvalidValueErrors());
+            return BadRequest(modelState.ListInvalidValueErrors());
         }
         [HttpPost]
         public async Task<IActionResult> VerifyEmail(string guid)
@@ -178,10 +187,10 @@ namespace VideoSite.Controllers
             {
                 await verifyEmailHub.Clients.Client(val.ClientId).SendAsync("emailAccepted");
                 EmailVertificationWaitingClientsSource.EmailVertificationWaitingClientsViewModel.Remove(val);
-                return Ok(new { succeeded = true });
+                return Ok();
             }
             else
-                return Ok(new { succeeded = false });
+                return BadRequest();
         }
         #region helpers
         [NonAction]

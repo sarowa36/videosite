@@ -19,8 +19,8 @@ export default {
         }
     },
     async created() {
-        var result=(await axios.postForm("identity/verifyemail",{guid:this.$route.params.id})).data;
-        if(result.succeeded){
+        var result=(await axios.postForm("identity/verifyemail",{guid:this.$route.params.id}));
+        if(result.status==200){
             this.position=1;
         }
         else{

@@ -13,7 +13,7 @@ namespace BusinessLayer.Validators.ViewModels.CategoryController
         public CategoryUpdateViewModelValidator()
         {
             RuleFor(x => x.Name).NotNull().NotEmpty().MaximumLength(3);
-            RuleFor(x => x.Id).NotEmpty().Must(x => x > 0);
+            RuleFor(x => x.Id).NotEmpty().GreaterThan(0);
         }
     }
 }

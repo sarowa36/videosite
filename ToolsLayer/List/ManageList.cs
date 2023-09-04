@@ -1,12 +1,11 @@
-﻿using DataAccessLayer;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccessLayer.Helpers
+namespace ToolsLayer.List
 {
     public static class ManageList
     {

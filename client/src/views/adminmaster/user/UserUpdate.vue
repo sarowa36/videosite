@@ -8,10 +8,10 @@ import router from '../../../router';
     <EditLayout user_role="admin">
         <div class="row justify-content-end">
             <div>
-            <Select2 v-model="roles" multiple>
-                <option v-for="role in allRoles" :value="role">{{ role }}</option>
-            </Select2>
-        </div>
+                <Select2 v-model="roles" multiple>
+                    <option v-for="role in allRoles" :value="role">{{ role }}</option>
+                </Select2>
+            </div>
             <button class="btn_theme col-2 mt-2" @click="sendRequest">Kaydet</button>
         </div>
     </EditLayout>
@@ -26,14 +26,20 @@ export default {
     },
     methods: {
         async sendRequest() {
-            var data={userId:this.$route.params.id, roles:this.roles};
+            var data = { userId: this.$route.params.id, roles: this.roles };
             await axios.postForm("user/UpdateUserRoles", data);
             router.go(-1)
         }
     },
     async created() {
-        this.allRoles = (await axios.get("user/allroles")).data;
-        this.roles=(await axios.get("user/GetUserRoles/"+this.$route.params.id)).data;
+        var req = (await axios.get("user/allroles"));
+        if (req == 200) {
+            this.allRoles = req.data;
+        }
+        req = (await axios.get("user/GetUserRoles/" + this.$route.params.id));
+        if (req.status == 200) {
+            this.roles = req.data;
+        }
     }
 }
 </script>

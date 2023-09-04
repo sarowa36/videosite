@@ -4,6 +4,7 @@
 I started to produce this project arbitraril and currently not finish. You can [check (the instant messaging feature is not working properly due to the policies of the hosting company)](http://sarowa36.com.tr) live example. Based from [Turkish Movie Website](https://www.turkanime.co/). Please if you have any recommandation share with me.
 
 # Features Im Working On
+ - Error Notification
  - Unit Test
  - LazyLoad ( Message :white_check_mark:, Content :x:)
  - Message ui/ux improvments

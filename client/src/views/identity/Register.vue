@@ -78,17 +78,20 @@ export default {
         async sendRequest(){
             var data=this.registerForm;
             data.profileImage=document.querySelector("#profileimg").files[0];
-            var result=(await axios.postForm("identity/register",data)).data;
-            if(result && result.succeeded){
+            var result=(await axios.postForm("identity/register",data));
+            if(result.status==200){
                 location.pathname="/";
             }
             else{
-                this.errors=result;
+                this.errors=result.data;
             }
         }
     },
     async created(){
-        this.allCategories=(await axios.get("category/getlist")).data;
+        var req=(await axios.get("category/getlist"));
+        if(req.status==200){
+        this.allCategories=req.data;
+    }
         const connection=new HubConnectionBuilder().withUrl(this.API_URL+"hub/verifyEmail").configureLogging(LogLevel.Information).build();
         await connection.start();
         this.connection=connection;

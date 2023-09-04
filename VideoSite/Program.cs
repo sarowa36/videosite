@@ -27,6 +27,7 @@ namespace VideoSite
                 return a != null && int.Parse(a) == 1;
             }
         }
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -39,7 +40,7 @@ namespace VideoSite
         public static void ConfigureServices(IServiceCollection services)
         {
             // Add services to the container.
-            services.AddMvc().AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<BusinessLayer.AssemblyMarkUp>()).AddNewtonsoftJson(x =>
+            services.AddMvc().AddNewtonsoftJson(x =>
             {
                 x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 x.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
@@ -67,6 +68,7 @@ namespace VideoSite
             });
 
             services.AddSingleton<MessageDatabaseSubscription>();
+
         }
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

@@ -6,6 +6,7 @@ using EntityLayer.Models.Contents;
 using EntityLayer.ViewModels.CategoryController;
 using BusinessLayer.Validators.ViewModels.CategoryController;
 using VideoSite.Helpers;
+using System.ComponentModel.DataAnnotations;
 
 namespace VideoSite.Controllers
 {
@@ -33,7 +34,7 @@ namespace VideoSite.Controllers
             }
             return BadRequest();
         }
-        public async Task<IActionResult> Update(int id)
+        public async Task<IActionResult> Update([Range(0,int.MaxValue)]int id)
         {
             if (r.Get(id, out Category data))
                 return Ok(new CategoryUpdateViewModel(data));
@@ -53,8 +54,11 @@ namespace VideoSite.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            r.Delete(id);
+           var error=  r.Delete(id);
+            if(string.IsNullOrWhiteSpace(error))
             return Ok();
+            else
+                return BadRequest();
         }
     }
 }

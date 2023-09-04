@@ -37,10 +37,12 @@ import { watch } from "vue";
                     </li>
                 </ul>
                 <div class="parentof_btn_like_dislike">
-                    <button :class="likeOrDislike.currentUserVal == 'Like' ? 'active' : ''" @click="(e) => likeOrDislikeAdd(e, 0)">
+                    <button :class="likeOrDislike.currentUserVal == 'Like' ? 'active' : ''"
+                        @click="(e) => likeOrDislikeAdd(e, 0)">
                         <FontAwesomeIcon icon="thumbs-up" /> {{ likeOrDislike.likeCount }}
                     </button>
-                    <button :class="likeOrDislike.currentUserVal == 'Dislike' ? 'active' : ''" @click="(e) => likeOrDislikeAdd(e, 1)">
+                    <button :class="likeOrDislike.currentUserVal == 'Dislike' ? 'active' : ''"
+                        @click="(e) => likeOrDislikeAdd(e, 1)">
                         <FontAwesomeIcon icon="thumbs-down" /> {{ likeOrDislike.dislikeCount }}
                     </button>
                 </div>
@@ -136,7 +138,10 @@ export default {
         },
         async likeOrDislikeAdd(e, param) {
             this.likeOrDislike.currentUserVal = param;
-            this.likeOrDislike = (await axios.postForm("like/CUD", { episodeId: this.currentEpisode.id, likeOrDislike: param })).data
+            var result = (await axios.postForm("like/CUD", { episodeId: this.currentEpisode.id, likeOrDislike: param }));
+            if (result.status == 200) {
+                this.likeOrDislike = result.data;
+            }
         },
         changeLabel(e, src) {
             $(".tabs_label > label").removeClass("focus");
@@ -145,13 +150,22 @@ export default {
             $(`.tab_content > #src${src.id}.tab`).removeClass("d-none")
         },
         async refreshModel() {
-            this.content = (await axios.get(`Content/Get/${this.$route.params.id}`)).data;
+            var req = (await axios.get(`Content/Get/${this.$route.params.id}`));
+            if (req.status == 200) {
+                this.content = req.data;
+            }
             this.currentEpisode = this.$route.params.episodeId ? this.content.episodeList.filter(x => x.id == this.$route.params.episodeId)[0] : this.content.episodeList[0];
-            this.likeOrDislike = (await axios.get("like/get?episodeId=" + this.currentEpisode.id)).data
+            req= (await axios.get("like/get?episodeId=" + this.currentEpisode.id));
+            if(req.status==200){
+            this.likeOrDislike =req.data
+        }
             this.comments = [];
-            (await axios.get(`Comment/getlist?episodeId=${this.currentEpisode.id}`)).data.forEach(x => {
+            req=await axios.get(`Comment/getlist?episodeId=${this.currentEpisode.id}`);
+            if(req==200){
+            req.data.forEach(x => {
                 this.comments.push(new Comment(x));
             })
+        }
             this.currentComment.episodeId = this.currentEpisode.id;
             if (this.USER != null) {
                 this.currentComment.imageLink = this.USER.imageLink;
@@ -161,10 +175,12 @@ export default {
             }
         },
         async sendComment() {
-            await axios.postForm("Comment/Create", this.currentComment);
+           var req= await axios.postForm("Comment/Create", this.currentComment);
+           if(req.status==200){
             this.comments.unshift(new Comment(this.currentComment));
             this.currentComment = new Comment();
             this.currentComment.imageLink = this.USER.imageLink;
+        }
         }
     },
     created() {

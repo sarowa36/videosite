@@ -3,6 +3,7 @@ import EditLayout from '../../components/EditLayout.vue';
 import Textbox from "../../components/Textbox.vue"
 import Select2 from "../../components/Select2.vue";
 import axios from 'axios';
+import router from '../../router';
 </script>
 <template>
     <EditLayout>
@@ -43,6 +44,9 @@ export default {
     methods:{
         async sendRequest(){
             var result=(await axios.postForm("identity/profileEdit",this.editForm))
+            if(result.status==200){
+                router.go(-1);
+            }
         }
     },
     async created(){

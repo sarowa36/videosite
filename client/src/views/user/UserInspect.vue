@@ -28,7 +28,10 @@ export default {
     async created(){
         var id=this.$route.params.id;
         if(id!=null && id){
-        this.inspectUser=(await axios.get("usercommunication/getUser/"+id)).data
+            var req=(await axios.get("usercommunication/getUser/"+id));
+            if(req.status==200){
+        this.inspectUser=req.data
+    }
     }
     }
 }

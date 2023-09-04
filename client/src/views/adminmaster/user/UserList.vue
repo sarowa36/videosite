@@ -55,7 +55,10 @@ export default {
     },
     methods:{
         async fetchData(){
-            this.contentList=(await axios.get("user/getlist")).data;
+            var req=(await axios.get("user/getlist"));
+            if(req.status==200){
+            this.contentList=req.data;
+        }
         },
         async toggleLock(content){
             content.lockOut=!content.lockOut;

@@ -51,8 +51,8 @@ export default {
             this.connection.invoke("forgotPassword",this.newPasswordForm.userName)
         },
         async refreshPassword(){
-            var response=(await axios.postForm("identity/refreshpassword",this.newPasswordForm)).data
-            if(response.succeeded){
+            var {data,status}=(await axios.postForm("identity/refreshpassword",this.newPasswordForm));
+            if(status==200){
                 router.push("/identity/login")
             }
             else{

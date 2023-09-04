@@ -1,6 +1,5 @@
-﻿using EntityLayer.Models.Contents;
-using EntityLayer.Models.Identity;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using ToolsLayer.FileManagement;
 
 namespace EntityLayer.ViewModels.IdentityController
 {

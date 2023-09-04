@@ -1,4 +1,6 @@
-﻿using EntityLayer.ViewModels.IdentityController;
+﻿using DataAccessLayer;
+using EntityLayer.ViewModels.IdentityController;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +13,10 @@ using Xunit.Priority;
 
 namespace VideoSite.UnitTest.Controllers
 {
-    [TestCaseOrderer(PriorityOrderer.Name, PriorityOrderer.Assembly)
-       , DefaultPriority(0)]
     public class IdentityControlerTests:ControllerTestBase
     {
-        private const string UserName = "foobarbaz";
-        private const string Password = "123654Foo+";
-        [Fact,Priority(-10)]
+
+        [Fact,Priority(-30)]
         public async void Register()
         {
             var data =ObjectToMultipartFormDataConverter.Convert( new RegisterViewModel(){
@@ -27,10 +26,18 @@ namespace VideoSite.UnitTest.Controllers
             UserName=UserName
             });
             data.Add(CreateImageContentForTest.Create(), "ProfileImage","test.png");
+            
             var res = await Client.PostAsync("api/identity/register", data);
+            Client.DefaultRequestHeaders.Add("Cookie", res.Headers.GetValues("Set-Cookie"));
             Assert.Equal(HttpStatusCode.OK, res.StatusCode);
-            res = await Client.GetAsync("api/identity/getuser");
-            Assert.Equal(HttpStatusCode.OK,res.StatusCode);
+            
         }
+        [Fact]
+        public async void GetUser()
+        {
+           var res = await Client.GetAsync("api/identity/getuser");
+            Assert.Equal(HttpStatusCode.OK, res.StatusCode);
+        }
+        
     }
 }

@@ -18,7 +18,7 @@ namespace BusinessLayer.Validators.ViewModels.ContentController
         {
             if (en == CrudMethodEnum.Update)
             {
-                RuleFor(x=>x.Id).NotEmpty().Must(x=>x>0);
+                RuleFor(x=>x.Id).NotEmpty().GreaterThan(0);
             }
             if(en == CrudMethodEnum.Create)
             {
@@ -36,7 +36,7 @@ namespace BusinessLayer.Validators.ViewModels.ContentController
         {
             if(en== CrudMethodEnum.Update)
             {
-                RuleFor(x => x.Id).NotNull().Must(x => x > 0);
+                RuleFor(x => x.Id).NotNull().GreaterThan(0);
                 RuleFor(x=>x.ContentId).NotNull().Must(x => x > 0);
             }
             RuleFor(x=>x.Name).NotNull().NotEmpty().MinimumLength(2);
@@ -49,7 +49,7 @@ namespace BusinessLayer.Validators.ViewModels.ContentController
         {
             if(en == CrudMethodEnum.Update)
             {
-                RuleFor(x=>x.Id).NotNull().Must(x => x > 0);
+                RuleFor(x=>x.Id).NotNull().GreaterThan(0);
                 RuleFor(x=>x.EpisodeId).NotNull().Must(x => x > 0);
             }
             RuleFor(x => x.Name).NotNull().NotEmpty().MinimumLength(2);

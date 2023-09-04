@@ -172,10 +172,12 @@ export default {
       if(postData.release=="Hepsi"){
         delete postData.release
       }
-      var { data } = (await axios.get("content/getlist", { params: postData }));
+      var { data,status } = (await axios.get("content/getlist", { params: postData }));
+      if(status==200){
       data.forEach(element => {
         this.contents.push(new Content(element));
       });
+    }
     }
   },
   async mounted() {

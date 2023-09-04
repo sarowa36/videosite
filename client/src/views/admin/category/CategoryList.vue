@@ -53,7 +53,10 @@ export default {
     },
     methods:{
         async fetchData(){
-            this.contentList=(await axios.get("Category/Getlist")).data;
+            var req=await axios.get("Category/Getlist");
+            if(req.status==200){
+            this.contentList=req.data;
+        }
         },
         openModal(val){
             this.isShowModal=true;

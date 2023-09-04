@@ -36,13 +36,12 @@ export default {
     },
     methods:{
         async sendRequest(){
-            var response=(await axios.postForm("identity/changepassword",this.$data)).data;
-            if(response.succeeded){
+            var {data,status}=(await axios.postForm("identity/changepassword",this.$data));
+            if(status==200){
                 router.go(-1)
             }
             else{
-                this.errors=response;
-                console.log(response)
+                this.errors=data;
             }
         }
     }

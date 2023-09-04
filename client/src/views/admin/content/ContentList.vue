@@ -67,7 +67,10 @@ export default {
     },
     methods:{
         async fetchData(){
-            this.contentList=(await axios.get("Content/Getlist")).data;
+            var req=await axios.get("Content/Getlist");
+            if(req.status==200){
+            this.contentList=req.data;
+        }
         },
         modalShow(id){
             this.isModalShowing=true;
