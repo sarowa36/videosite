@@ -14,6 +14,7 @@ namespace VideoSite.UnitTest
         public static int DefaultFirstItemId { get { return 1; } }
         public const string UserName = "foobarbaz";
         public const string Password = "123654Foo+";
+        public const string NewPassword = "123654Bar+";
         public static HttpClient Client { get {
                 if (_Client == null)
                     _Client = Factory.CreateClient();// Server.CreateClient();

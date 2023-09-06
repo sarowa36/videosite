@@ -11,8 +11,8 @@ namespace ToolsLayer.List
     {
         public static void RemoveBeforeAddNew(this IEnumerable<int> beforeList, IEnumerable<int> newList, Action<IEnumerable<int>> removeFunc, Action<IEnumerable<int>> addFunc)
         {
-            var removeList = beforeList.Except(newList);
-            var addlist = newList.Except(beforeList);
+            var removeList = (beforeList ?? new List<int>()).Except(newList??new List<int>());
+            var addlist = (newList??new List<int>()).Except(beforeList ?? new List<int>());
             if (removeList != null && removeList.Count() > 0)
                 removeFunc.Invoke(removeList);
             if (addlist != null && addlist.Count() > 0)

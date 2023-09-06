@@ -43,6 +43,8 @@ namespace VideoSite.Controllers
 
                 if (model.Categories != null && model.Categories.Count > 0)
                     user.UserM2MCategory.AddRange(model.Categories.Select(x => new UserM2MCategory() { CategoryId = x }));
+                if (Program.IsInUnitTest)
+                    user.PasswordHash = new PasswordHasher<ApplicationUser>().HashPassword(user, model.Password);
                 var result = await userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
